@@ -1,14 +1,15 @@
 import type { Metadata, Viewport } from "next";
-import { IBM_Plex_Sans_Arabic } from "next/font/google";
+import { Cairo } from "next/font/google";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { PwaRegister } from "@/components/providers/pwa-register";
+import { PwaInstallPrompt } from "@/components/providers/pwa-install-prompt";
 import { Toaster } from "sonner";
 import "./globals.css";
 
-const ibmPlexArabic = IBM_Plex_Sans_Arabic({
+const cairo = Cairo({
   subsets: ["arabic", "latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  variable: "--font-ibm-plex-arabic",
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
+  variable: "--font-cairo",
   display: "swap",
 });
 
@@ -48,7 +49,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ar" dir="rtl" suppressHydrationWarning className={ibmPlexArabic.variable}>
+    <html lang="ar" dir="rtl" suppressHydrationWarning className={cairo.variable}>
       <body className="min-h-screen bg-zinc-50 font-sans text-zinc-900 antialiased dark:bg-zinc-950 dark:text-zinc-50 selection:bg-blue-600 selection:text-white">
         <ThemeProvider
           attribute="class"
@@ -67,6 +68,7 @@ export default function RootLayout({
             }}
           />
           <PwaRegister />
+          <PwaInstallPrompt />
         </ThemeProvider>
       </body>
     </html>
