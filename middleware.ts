@@ -64,7 +64,7 @@ export async function middleware(request: NextRequest) {
 
   // If user is not logged in
   if (!user) {
-    if (!isLoginPage) {
+    if (!isLoginPage && !isRootPage) {
       const redirectUrl = new URL("/login", request.url);
       return NextResponse.redirect(redirectUrl);
     }
@@ -85,8 +85,8 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  // If logged in and visiting login or root page
-  if (isLoginPage || isRootPage) {
+  // If logged in and visiting login page, redirect to their dashboard
+  if (isLoginPage) {
     if (profile?.role === "admin") {
       return NextResponse.redirect(new URL("/admin", request.url));
     }
