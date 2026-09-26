@@ -1,6 +1,14 @@
 import { z } from "zod";
 import { isValidHttpUrl, extractYouTubeVideoId } from "@/lib/youtube/utils";
 
+// Universal PostgreSQL-compatible UUID schema (accepts any 32 hex characters with standard 8-4-4-4-12 hyphenation)
+export const uuidSchema = z
+  .string()
+  .regex(
+    /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/,
+    "معرف غير صالح"
+  );
+
 export const LoginSchema = z.object({
   username: z.string().min(3, "اسم المستخدم يجب أن يتكون من 3 أحرف على الأقل").max(100),
   password: z.string().min(6, "كلمة المرور يجب أن تتكون من 6 أحرف على الأقل"),
@@ -16,20 +24,20 @@ export const CreateUserSchema = z.object({
   password: z.string().min(6, "كلمة المرور يجب أن تتكون من 6 خانات على الأقل"),
   role: z.enum(["admin", "student"]).default("student"),
   is_active: z.boolean().default(true),
-  subject_ids: z.array(z.string().uuid()).optional().default([]),
+  subject_ids: z.array(uuidSchema).optional().default([]),
 });
 
 export const UpdateUserSchema = z.object({
-  id: z.string().uuid(),
+  id: uuidSchema,
   full_name: z.string().min(2, "الاسم الكامل مطلوب").max(100),
   role: z.enum(["admin", "student"]),
   is_active: z.boolean(),
   password: z.string().min(6, "كلمة المرور يجب أن تتكون من 6 خانات على الأقل").optional().or(z.literal("")),
-  subject_ids: z.array(z.string().uuid()).optional().default([]),
+  subject_ids: z.array(uuidSchema).optional().default([]),
 });
 
 export const SubjectSchema = z.object({
-  id: z.string().uuid().optional(),
+  id: uuidSchema.optional(),
   name: z.string().min(2, "اسم المادة مطلوب").max(120),
   code: z.string().min(1, "رمز المادة مطلوب").max(20),
   description: z.string().max(500).optional().nullable(),
@@ -39,8 +47,8 @@ export const SubjectSchema = z.object({
 });
 
 export const ContentSchema = z.object({
-  id: z.string().uuid().optional(),
-  subject_id: z.string().uuid("معرف المادة مطلوب"),
+  id: uuidSchema.optional(),
+  subject_id: uuidSchema,
   type: z.enum(["lecture", "section", "summary", "exam"]).default("lecture"),
   title: z.string().min(2, "عنوان المحتوى مطلوب").max(200),
   description: z.string().max(2000).optional().nullable(),
@@ -49,8 +57,8 @@ export const ContentSchema = z.object({
 });
 
 export const ResourceSchema = z.object({
-  id: z.string().uuid().optional(),
-  content_id: z.string().uuid("معرف المحتوى مطلوب"),
+  id: uuidSchema.optional(),
+  content_id: uuidSchema,
   type: z.enum(["video", "pdf", "link", "summary", "presentation", "exam"]).default("video"),
   title: z.string().min(2, "عنوان المرفق مطلوب").max(150),
   url: z.string().min(5, "الرابط مطلوب").refine((val) => {
@@ -72,11 +80,11 @@ export const ResourceSchema = z.object({
 });
 
 export const AnnouncementSchema = z.object({
-  id: z.string().uuid().optional(),
+  id: uuidSchema.optional(),
   title: z.string().min(3, "عنوان الإعلان مطلوب").max(150),
   content: z.string().min(5, "نص الإعلان مطلوب").max(3000),
   target_type: z.enum(["all", "subject"]).default("all"),
-  subject_id: z.string().uuid().optional().nullable(),
+  subject_id: uuidSchema.optional().nullable(),
   is_published: z.boolean().default(true),
   expires_at: z.string().optional().nullable(),
 });
