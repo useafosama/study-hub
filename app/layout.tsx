@@ -14,15 +14,15 @@ const ibmPlexArabic = IBM_Plex_Sans_Arabic({
 
 export const metadata: Metadata = {
   title: {
-    default: "Study Hub | منصة ستادي هب",
-    template: "%s | Study Hub",
+    default: "منصة الچوو التعليمية | يوسف أسامة",
+    template: "%s | منصة الچوو التعليمية",
   },
-  description: "منصة تعليمية خاصة للدراسة وتنظيم المحاضرات والأقسام الأكاديمية",
+  description: "منصة تعليمية خاصة للدراسة وتنظيم المحاضرات والأقسام الأكاديمية بإشراف يوسف أسامة",
   manifest: "/manifest.webmanifest",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "Study Hub",
+    title: "منصة الچوو",
   },
   icons: {
     icon: "/icon.svg",

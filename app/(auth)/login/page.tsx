@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import { useActionState } from "react";
 import { useSearchParams } from "next/navigation";
 import { loginAction } from "@/actions/auth";
@@ -8,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
-import { Lock, User, Eye, EyeOff, Loader2, BookOpen, AlertCircle, ShieldAlert } from "lucide-react";
+import { Lock, User, Eye, EyeOff, Loader2, GraduationCap, AlertCircle, ShieldAlert, ArrowRight } from "lucide-react";
 
 export default function LoginPage() {
   const searchParams = useSearchParams();
@@ -25,7 +26,13 @@ export default function LoginPage() {
       </div>
 
       {/* Top bar controls */}
-      <div className="absolute top-4 left-4 flex items-center gap-2">
+      <div className="absolute top-4 left-4 right-4 flex items-center justify-between">
+        <Button asChild variant="ghost" size="sm" className="text-xs text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 gap-1.5 rounded-xl">
+          <Link href="/">
+            <ArrowRight className="h-3.5 w-3.5" />
+            <span>العودة للرئيسية</span>
+          </Link>
+        </Button>
         <ThemeToggle />
       </div>
 
@@ -33,13 +40,13 @@ export default function LoginPage() {
         {/* Brand Header */}
         <div className="text-center space-y-2">
           <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/20 mb-2">
-            <BookOpen className="h-7 w-7" />
+            <GraduationCap className="h-7 w-7" />
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
-            منصة ستادي هب
+            منصة الچوو التعليمية
           </h1>
           <p className="text-sm text-zinc-500 dark:text-zinc-400">
-            Study Hub — منصة المحتوى التعليمي والمحاضرات
+            بإشراف يوسف أسامة — بوابة تسجيل الدخول
           </p>
         </div>
 

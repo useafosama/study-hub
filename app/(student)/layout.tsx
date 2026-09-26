@@ -50,11 +50,11 @@ export default async function StudentLayout({
                 <GraduationCap className="h-5 w-5" />
               </div>
               <div className="min-w-0">
-                <span className="font-bold text-base text-zinc-900 dark:text-zinc-100 leading-none">
-                  Study Hub
+                <span className="font-bold text-sm text-zinc-900 dark:text-zinc-100 leading-none truncate block">
+                  منصة الچوو
                 </span>
-                <span className="block text-[10px] text-zinc-400 mt-0.5">
-                  منصة الدراسة
+                <span className="block text-[10px] text-zinc-400 mt-0.5 truncate">
+                  يوسف أسامة
                 </span>
               </div>
             </Link>
@@ -131,7 +131,7 @@ export default async function StudentLayout({
           <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-blue-600 text-white">
             <GraduationCap className="h-4 w-4" />
           </div>
-          <span className="font-bold text-sm">Study Hub</span>
+          <span className="font-bold text-sm">منصة الچوو</span>
         </Link>
         <div className="flex items-center gap-1.5">
           <ThemeToggle />

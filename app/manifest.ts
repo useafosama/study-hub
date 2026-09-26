@@ -2,9 +2,9 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Study Hub | منصة ستادي هب",
-    short_name: "Study Hub",
-    description: "منصة تعليمية خاصة للدراسة وتنظيم المحتوى والمحاضرات",
+    name: "منصة الچوو التعليمية | يوسف أسامة",
+    short_name: "منصة الچوو",
+    description: "منصة تعليمية خاصة للدراسة وتنظيم المحتوى والمحاضرات بإشراف يوسف أسامة",
     start_url: "/dashboard",
     display: "standalone",
     background_color: "#09090b",
