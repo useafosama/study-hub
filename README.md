@@ -1,36 +1,84 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Study Hub | منصة ستادي هب
 
-## Getting Started
+منصة تعليمية خاصة حديثة مصممة لإدارة وتنظيم المحتوى الأكاديمي، المحاضرات، والسكاشن، مع تنظيم روابط مقاطع فيديو YouTube وملفات PDF الخارجية، مع تحكم دقيق في صلاحيات وصول الطلاب لكل مادة على حدة عبر Supabase Auth و Row Level Security (RLS).
 
-First, run the development server:
+---
 
+## المميزات الرئيسية
+
+### 🎓 تجربة الطالب (Student Experience)
+- **تسجيل دخول سهل وسريع** باستخدام اسم المستخدم وكلمة المرور دون الحاجة لإدخال بريد إلكتروني.
+- **عزل أمني تام للمواد**: يرى الطالب فقط المواد الدراسية المصرح له بها من قبل المشرف.
+- **متابعة التعلم (Continue Learning)**: استئناف المحاضرة الأخيرة بنقرة واحدة.
+- **مشاهدة مقاطع YouTube داخل المنصة** مع خيار فتح المقطع مباشرة على YouTube.
+- **استعراض ملفات PDF الخارجية** (Google Drive, OneDrive, روابط مباشرة).
+- **تتبع الإنجاز والتقدم**: تحديد المحاضرات المكتملة وحساب نسبة الإنجاز لكل مادة.
+- **حفظ المحاضرات (Bookmarks)**: قائمة مرجعية بالمحاضرات المفضلة.
+- **بحث فوري آمن**: بحث شامل في المواد والمحاضرات والملفات المصرح بها فقط.
+- **لوحة إعلانات**: متابعة التنبيهات العامة والخاصة بكل مادة.
+
+### 🛡️ لوحة الإدارة (Admin Panel)
+- **لوحة متابعة إحصائية**: عرض أعداد الطلاب، المواد، المحاضرات، والمرفقات مع سجل تدقيق النشاطات.
+- **إدارة المستخدمين والطلاب (`/admin/users`)**:
+  - إنشاء حسابات الطلاب بالاسم واسم المستخدم وكلمة المرور.
+  - تعيين وتعديل المواد المصرح بها لكل طالب بنقرات محددة.
+  - تفعيل وتعطيل الحسابات وتغيير كلمات المرور.
+- **إدارة المواد والمناهج (`/admin/subjects`)**:
+  - إنشاء وتعديل وحذف المواد وتغيير الرمز (Code) والوصف.
+  - نشر وإخفاء المواد وإعادة ترتيبها.
+- **إدارة المحاضرات والأقسام (`/admin/subjects/[id]/content`)**:
+  - إضافة محاضرات وسكاشن مع التحقق التلقائي من روابط YouTube واستخراج معرف الفيديو.
+  - إرفاق روابط PDF الخارجية والمراجع الإضافية.
+  - إعادة ترتيب المحتوى ونشره/إخفاؤه.
+- **إدارة الإعلانات (`/admin/announcements`)**: نشر إعلانات عامة أو مخصصة لمادة معينة.
+- **سجل النشاطات (`/admin/activity`)**: سجل تدقيق كامل لكافة العمليات الإدارية وتفاعلات المستخدمين.
+- **إعدادات المنصة (`/admin/settings`)**: تخصيص اسم المنصة، المظهر الافتراضي، ووضع الصيانة.
+
+### 📱 التقنيات والتصميم
+- **Next.js (App Router)** مع Server Components و Server Actions.
+- **تصميم Apple-inspired Minimalist**: خط **IBM Plex Sans Arabic** مع دعم كامل لاتجاه النص من اليمين لليسار (RTL).
+- **دعم PWA كامل**: تطبيق قابل للتثبيت على الهواتف والأجهزة اللوحية مع شاشة Offline وشريط تنقل سفلي للهواتف.
+- **دعم المظهر الفاتح والداكن (Light & Dark Mode)** مع الحفظ التلقائي لتفضيلات المستخدم.
+- **أمان عالي و RLS**: لا يمكن لأي طالب استعلام بيانات مادة غير مصرح له بها حتى عبر الـ API المباشر.
+
+---
+
+## تشغيل المشروع
+
+### 1. المتطلبات
+- Node.js 18+
+- حساب Supabase (أو مشروع PostgreSQL متوافق)
+
+### 2. تثبيت الحزم
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 3. إعداد متغيرات البيئة
+قم بإنشاء ملف `.env.local` وإضافة المفاتيح الخاصة بمشروع Supabase:
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key-here
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 4. تطبيق قواعد البيانات والـ Migrations
+قم بتنفيذ ملفات الـ SQL الموجودة في مجلد `supabase/migrations/` في Supabase SQL Editor:
+1. `supabase/migrations/20260921000001_initial_schema.sql` (الجداول والفهارس والـ Triggers)
+2. `supabase/migrations/20260921000002_rls_policies.sql` (سياسات الأمان RLS)
+3. `supabase/seed.sql` (الإعدادات الأولية)
 
-## Learn More
+### 5. تشغيل خادم التطوير
+```bash
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+افتح المتصفح على `http://localhost:3000`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 6. بناء المشروع للإنتاج
+```bash
+npm run build
+npm run start
+```
