@@ -16,6 +16,8 @@ import {
   LogOut,
   GraduationCap,
   Shield,
+  Calendar,
+  FileEdit,
 } from "lucide-react";
 
 export default async function StudentLayout({
@@ -32,6 +34,8 @@ export default async function StudentLayout({
   const navItems = [
     { href: "/dashboard", label: "الرئيسية", icon: LayoutDashboard },
     { href: "/subjects", label: "موادي", icon: BookOpen },
+    { href: "/planner", label: "خطة المذاكرة", icon: Calendar },
+    { href: "/notes", label: "دفتر ملاحظاتي", icon: FileEdit },
     { href: "/bookmarks", label: "المحفوظات", icon: Bookmark },
     { href: "/search", label: "البحث", icon: Search },
     { href: "/announcements", label: "الإعلانات", icon: Bell },

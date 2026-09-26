@@ -9,6 +9,7 @@ import {
 } from "@/actions/student";
 import { YouTubePlayer } from "@/components/shared/youtube-player";
 import { PDFViewer } from "@/components/shared/pdf-viewer";
+import { SmartNotes } from "@/components/student/smart-notes";
 import { saveRecentViewed } from "@/components/student/continue-learning-widget";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -175,6 +176,15 @@ export function ContentViewer({
           لا يوجد مقطع فيديو مرفق بهذه المحاضرة
         </div>
       )}
+
+      {/* Smart Lecture Notes */}
+      <SmartNotes
+        contentId={content.id}
+        contentTitle={content.title}
+        subjectId={subject.id}
+        subjectName={subject.name}
+        subjectCode={subject.code}
+      />
 
       {/* Materials & Attachments Section */}
       {(pdfResources.length > 0 || linkResources.length > 0) && (

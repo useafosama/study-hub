@@ -2,6 +2,7 @@ import * as React from "react";
 import Link from "next/link";
 import { getStudentDashboardData } from "@/actions/student";
 import { ContinueLearningWidget } from "@/components/student/continue-learning-widget";
+import { StreakBadgeWidget } from "@/components/student/streak-badge-widget";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
@@ -148,7 +149,15 @@ export default async function StudentDashboardPage() {
         }
       />
 
-      {/* 4. Announcements Section (if any) */}
+      {/* 4. Badges & Daily Streak System */}
+      <StreakBadgeWidget
+        totalContents={totalContentsCount}
+        completedContents={totalCompletedCount}
+        subjectsCount={subjects.length}
+        completedSubjectsCount={subjects.filter((s) => s.progress_percentage === 100).length}
+      />
+
+      {/* 5. Announcements Section (if any) */}
       {announcements.length > 0 && (
         <div className="space-y-3">
           <div className="flex items-center justify-between">
