@@ -4,6 +4,7 @@ import { HeroSection } from "@/components/landing/hero-section";
 import { QuickGuide } from "@/components/landing/quick-guide";
 import { FeaturesGrid } from "@/components/landing/features-grid";
 import { FAQSection } from "@/components/landing/faq-section";
+import { CtaBanner } from "@/components/landing/cta-banner";
 import { LandingFooter } from "@/components/landing/landing-footer";
 
 export default async function HomePage() {
@@ -17,7 +18,7 @@ export default async function HomePage() {
     : null;
 
   return (
-    <div className="min-h-screen flex flex-col bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-50">
+    <div className="min-h-screen flex flex-col bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-50 selection:bg-blue-600 selection:text-white">
       {/* Navigation Header */}
       <LandingNavbar sessionUser={sessionUser} />
 
@@ -27,6 +28,7 @@ export default async function HomePage() {
         <FeaturesGrid />
         <QuickGuide />
         <FAQSection />
+        <CtaBanner sessionUser={sessionUser} />
       </main>
 
       {/* Footer */}

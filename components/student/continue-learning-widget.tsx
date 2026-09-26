@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { Play, ArrowLeft, BookOpen } from "lucide-react";
+import { Play, ArrowLeft, Sparkles, BookOpen, Clock } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -50,37 +50,49 @@ export function ContinueLearningWidget({ fallbackContent }: { fallbackContent?: 
   if (!activeItem) return null;
 
   return (
-    <Card className="apple-card p-5 bg-gradient-to-r from-blue-600/10 via-indigo-600/5 to-transparent border-blue-200/60 dark:border-blue-900/40 relative overflow-hidden">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex items-start gap-3.5">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-blue-600 text-white shadow-md shadow-blue-500/20">
-            <Play className="h-5 w-5 fill-current ml-0.5" />
+    <div className="relative rounded-3xl overflow-hidden border border-blue-500/30 bg-gradient-to-r from-blue-600/10 via-indigo-600/10 to-purple-600/5 dark:from-blue-950/40 dark:via-indigo-950/30 dark:to-zinc-900/40 p-6 backdrop-blur-xl shadow-lg shadow-blue-500/5">
+      
+      {/* Background soft ambient highlight */}
+      <div className="pointer-events-none absolute -top-12 -left-12 w-48 h-48 bg-blue-500/15 rounded-full blur-2xl" />
+
+      <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-5">
+        <div className="flex items-start gap-4">
+          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white shadow-xl shadow-blue-500/30">
+            <Play className="h-6 w-6 fill-current ml-0.5" />
           </div>
-          <div className="space-y-1">
+
+          <div className="space-y-1.5">
             <div className="flex items-center gap-2">
-              <span className="text-xs font-semibold text-blue-600 dark:text-blue-400">
-                متابعة التعلم
+              <span className="inline-flex items-center gap-1 text-[11px] font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/80 px-2.5 py-0.5 rounded-md border border-blue-500/20">
+                <Sparkles className="h-3 w-3" />
+                استئناف المحاضرة الأخيرة
               </span>
-              <Badge variant="outline" className="text-[10px] uppercase font-mono">
+              <span className="text-[10px] font-mono font-bold uppercase text-zinc-500 bg-zinc-100 dark:bg-zinc-800 px-2 py-0.5 rounded-md">
                 {activeItem.subjectCode || activeItem.subjects?.code}
-              </Badge>
+              </span>
             </div>
-            <h3 className="text-base font-bold text-zinc-900 dark:text-zinc-100">
-              {activeItem.subjectName || activeItem.subjects?.name}
-            </h3>
-            <p className="text-xs text-zinc-600 dark:text-zinc-400">
+
+            <h3 className="text-base sm:text-lg font-bold text-zinc-900 dark:text-zinc-100">
               {activeItem.contentTitle || activeItem.title}
+            </h3>
+
+            <p className="text-xs text-zinc-500 dark:text-zinc-400">
+              المقرر: {activeItem.subjectName || activeItem.subjects?.name}
             </p>
           </div>
         </div>
 
-        <Button asChild className="rounded-xl shadow-sm gap-2 shrink-0 self-end sm:self-center">
+        <Button
+          asChild
+          size="lg"
+          className="rounded-2xl h-11 px-6 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-xs sm:text-sm shadow-md shadow-blue-500/20 shrink-0 self-end md:self-center gap-2 transition-transform hover:scale-105"
+        >
           <Link href={`/content/${activeItem.contentId || activeItem.id}`}>
-            <span>متابعة المحاضرة</span>
+            <span>متابعة الدرس الآن</span>
             <ArrowLeft className="h-4 w-4" />
           </Link>
         </Button>
       </div>
-    </Card>
+    </div>
   );
 }
