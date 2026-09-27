@@ -50,18 +50,18 @@ export function SubjectView({
   return (
     <div className="space-y-6">
       {/* Breadcrumb navigation */}
-      <div className="flex items-center gap-2 text-xs text-zinc-500 dark:text-zinc-400">
-        <Link href="/subjects" className="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">
+      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+        <Link href="/subjects" className="hover:text-foreground transition-colors">
           المواد الدراسية
         </Link>
         <ChevronRight className="h-3.5 w-3.5 rotate-180" />
-        <span className="font-semibold text-zinc-800 dark:text-zinc-200 truncate">
+        <span className="font-semibold text-foreground truncate">
           {subject.name}
         </span>
       </div>
 
       {/* Subject Header Card */}
-      <Card className="apple-card p-6 bg-gradient-to-l from-blue-500/10 via-indigo-500/5 to-transparent border-blue-200/60 dark:border-blue-900/40">
+      <Card className="apple-card p-6 bg-gradient-to-l from-primary/10 via-primary/5 to-transparent border-border">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-2">
             <div className="flex items-center gap-2">
@@ -72,26 +72,26 @@ export function SubjectView({
                 {lectures.length} محاضرات • {sections.length} أقسام
               </Badge>
             </div>
-            <h1 className="text-2xl md:text-3xl font-bold text-zinc-900 dark:text-zinc-50">
+            <h1 className="text-2xl md:text-3xl font-bold text-foreground">
               {subject.name}
             </h1>
             {subject.description && (
-              <p className="text-xs text-zinc-600 dark:text-zinc-400 max-w-2xl leading-relaxed">
+              <p className="text-xs text-muted-foreground max-w-2xl leading-relaxed">
                 {subject.description}
               </p>
             )}
           </div>
 
           {/* Progress Indicator Card */}
-          <div className="p-4 rounded-2xl bg-white/80 dark:bg-zinc-900/80 border border-zinc-200/80 dark:border-zinc-800/80 min-w-[200px] space-y-2 shrink-0 shadow-sm">
+          <div className="p-4 rounded-2xl bg-card/80 backdrop-blur-md border border-border min-w-[200px] space-y-2 shrink-0 shadow-xs">
             <div className="flex items-center justify-between text-xs">
-              <span className="font-medium text-zinc-600 dark:text-zinc-400">نسبة الإنجاز</span>
-              <span className="font-bold text-blue-600 dark:text-blue-400 text-sm">
+              <span className="font-medium text-muted-foreground">نسبة الإنجاز</span>
+              <span className="font-bold text-primary text-sm">
                 {progressPercentage}%
               </span>
             </div>
             <Progress value={progressPercentage} className="h-2" />
-            <p className="text-[11px] text-zinc-400 text-center">
+            <p className="text-[11px] text-muted-foreground text-center">
               {completedCount} من {totalCount} محتوى مكتمل
             </p>
           </div>
@@ -99,7 +99,7 @@ export function SubjectView({
       </Card>
 
       {/* Filter Tabs */}
-      <div className="flex items-center gap-2 border-b border-zinc-200 dark:border-zinc-800 pb-2">
+      <div className="flex items-center gap-2 border-b border-border pb-2">
         <Button
           variant={activeTab === "all" ? "default" : "ghost"}
           size="sm"
@@ -144,14 +144,14 @@ export function SubjectView({
 
             return (
               <Link key={item.id} href={`/content/${item.id}`} className="group block">
-                <Card className="apple-card p-4 hover:border-blue-300 dark:hover:border-blue-700 transition-all flex items-center justify-between gap-4">
+                <Card className="apple-card p-4 hover:border-primary/40 transition-all flex items-center justify-between gap-4">
                   <div className="flex items-center gap-3.5 min-w-0">
                     {/* Completion status icon */}
                     <div className="shrink-0">
                       {item.is_completed ? (
-                        <CheckCircle2 className="h-5 w-5 text-emerald-500 fill-emerald-100 dark:fill-emerald-950/40" />
+                        <CheckCircle2 className="h-5 w-5 text-emerald-500 fill-emerald-500/20" />
                       ) : (
-                        <Circle className="h-5 w-5 text-zinc-300 dark:text-zinc-700" />
+                        <Circle className="h-5 w-5 text-muted-foreground/40" />
                       )}
                     </div>
 
@@ -163,7 +163,7 @@ export function SubjectView({
                         >
                           {item.type === "lecture" ? "محاضرة" : "سكشن"}
                         </Badge>
-                        <h3 className="font-bold text-sm text-zinc-900 dark:text-zinc-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors truncate">
+                        <h3 className="font-bold text-sm text-foreground group-hover:text-primary transition-colors truncate">
                           {item.title}
                         </h3>
                         {item.is_bookmarked && (
@@ -172,13 +172,13 @@ export function SubjectView({
                       </div>
 
                       {item.description && (
-                        <p className="text-xs text-zinc-500 dark:text-zinc-400 line-clamp-1">
+                        <p className="text-xs text-muted-foreground line-clamp-1">
                           {item.description}
                         </p>
                       )}
 
                       {/* Resource Indicators */}
-                      <div className="flex items-center gap-2 pt-1 text-[11px] text-zinc-500 dark:text-zinc-400">
+                      <div className="flex items-center gap-2 pt-1 text-[11px] text-muted-foreground">
                         {hasVideo && (
                           <span className="flex items-center gap-1 text-red-600 dark:text-red-400 font-medium">
                             <Video className="h-3 w-3" />
@@ -192,7 +192,7 @@ export function SubjectView({
                           </span>
                         )}
                         {hasLink && (
-                          <span className="flex items-center gap-1 text-blue-600 dark:text-blue-400 font-medium">
+                          <span className="flex items-center gap-1 text-primary font-medium">
                             <LinkIcon className="h-3 w-3" />
                             مراجع
                           </span>
@@ -204,7 +204,7 @@ export function SubjectView({
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="rounded-xl gap-1 text-xs text-zinc-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 shrink-0"
+                    className="rounded-xl gap-1 text-xs text-muted-foreground group-hover:text-primary shrink-0"
                   >
                     <span>فتح</span>
                     <ArrowLeft className="h-4 w-4" />
@@ -218,3 +218,4 @@ export function SubjectView({
     </div>
   );
 }
+

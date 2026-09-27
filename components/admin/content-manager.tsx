@@ -207,18 +207,18 @@ export function ContentManager({ subject, initialContents }: ContentManagerProps
   return (
     <div className="space-y-6">
       {/* Breadcrumb & Navigation */}
-      <div className="flex items-center gap-2 text-xs text-zinc-500 dark:text-zinc-400">
-        <Link href="/admin/subjects" className="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">
+      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+        <Link href="/admin/subjects" className="hover:text-foreground transition-colors">
           المواد الدراسية
         </Link>
         <ChevronRight className="h-3.5 w-3.5 rotate-180" />
-        <span className="font-semibold text-zinc-800 dark:text-zinc-200 truncate">
+        <span className="font-semibold text-foreground truncate">
           {subject.name}
         </span>
       </div>
 
       {/* Subject Header Card */}
-      <Card className="apple-card p-6 bg-gradient-to-l from-blue-50/50 to-white/80 dark:from-blue-950/20 dark:to-zinc-900/80">
+      <Card className="apple-card p-6 bg-gradient-to-l from-primary/5 to-card/80">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
@@ -231,11 +231,11 @@ export function ContentManager({ subject, initialContents }: ContentManagerProps
                 <Badge variant="secondary">مسودة (مخفي)</Badge>
               )}
             </div>
-            <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
+            <h1 className="text-2xl font-bold text-foreground">
               {subject.name}
             </h1>
             {subject.description && (
-              <p className="text-xs text-zinc-500 dark:text-zinc-400 max-w-2xl">
+              <p className="text-xs text-muted-foreground max-w-2xl">
                 {subject.description}
               </p>
             )}
@@ -255,7 +255,7 @@ export function ContentManager({ subject, initialContents }: ContentManagerProps
       </Card>
 
       {/* Filter Tabs */}
-      <div className="flex items-center gap-2 border-b border-zinc-200 dark:border-zinc-800 pb-2">
+      <div className="flex items-center gap-2 border-b border-border/70 pb-2">
         <Button
           variant={activeTab === "all" ? "default" : "ghost"}
           size="sm"
@@ -308,15 +308,15 @@ export function ContentManager({ subject, initialContents }: ContentManagerProps
             return (
               <Card
                 key={content.id}
-                className="apple-card p-4 hover:border-zinc-300 dark:hover:border-zinc-700 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+                className="apple-card p-4 hover:border-primary/40 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4"
               >
                 {/* Info and resources preview */}
                 <div className="flex items-start gap-3.5 min-w-0">
-                  <div className="flex items-center gap-1 mt-1 text-zinc-400">
+                  <div className="flex items-center gap-1 mt-1 text-muted-foreground">
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-6 w-6 rounded-md p-0 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                      className="h-6 w-6 rounded-md p-0 hover:bg-secondary/60 text-muted-foreground"
                       disabled={index === 0}
                       onClick={() => handleMove(index, "up")}
                       title="تحريك لأعلى"
@@ -326,7 +326,7 @@ export function ContentManager({ subject, initialContents }: ContentManagerProps
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-6 w-6 rounded-md p-0 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                      className="h-6 w-6 rounded-md p-0 hover:bg-secondary/60 text-muted-foreground"
                       disabled={index === filteredContents.length - 1}
                       onClick={() => handleMove(index, "down")}
                       title="تحريك لأسفل"
@@ -343,7 +343,7 @@ export function ContentManager({ subject, initialContents }: ContentManagerProps
                       >
                         {content.type === "lecture" ? "محاضرة" : "سكشن / قسم"}
                       </Badge>
-                      <span className="font-bold text-sm text-zinc-900 dark:text-zinc-100 truncate">
+                      <span className="font-bold text-sm text-foreground truncate">
                         {content.title}
                       </span>
                       {content.is_published ? (
@@ -354,7 +354,7 @@ export function ContentManager({ subject, initialContents }: ContentManagerProps
                     </div>
 
                     {content.description && (
-                      <p className="text-xs text-zinc-500 dark:text-zinc-400 line-clamp-1">
+                      <p className="text-xs text-muted-foreground line-clamp-1">
                         {content.description}
                       </p>
                     )}
@@ -397,8 +397,8 @@ export function ContentManager({ subject, initialContents }: ContentManagerProps
 
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg">
-                        <MoreVertical className="h-4 w-4 text-zinc-400" />
+                      <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg text-muted-foreground hover:text-foreground">
+                        <MoreVertical className="h-4 w-4" />
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-40">
@@ -445,7 +445,7 @@ export function ContentManager({ subject, initialContents }: ContentManagerProps
 
           <form onSubmit={handleAddSubmit} className="space-y-4 pt-2">
             <div className="space-y-1.5">
-              <label className="text-xs font-medium">العنوان</label>
+              <label className="text-xs font-medium text-foreground">العنوان</label>
               <Input
                 name="title"
                 placeholder={contentTypeToAdd === "lecture" ? "مثال: المحاضرة 01 — مقدمة عامة" : "مثال: سكشن 01 — التطبيقات العملية"}
@@ -455,7 +455,7 @@ export function ContentManager({ subject, initialContents }: ContentManagerProps
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-medium">الوصف / ملاحظات</label>
+              <label className="text-xs font-medium text-foreground">الوصف / ملاحظات</label>
               <Textarea
                 name="description"
                 placeholder="نبذة موجزة أو تعليمات خاصة بالمحاضرة..."
@@ -465,8 +465,8 @@ export function ContentManager({ subject, initialContents }: ContentManagerProps
             </div>
 
             {/* Resources Inputs Section */}
-            <div className="space-y-3 pt-3 border-t border-zinc-100 dark:border-zinc-800">
-              <h4 className="text-xs font-semibold text-zinc-900 dark:text-zinc-100 flex items-center gap-1.5">
+            <div className="space-y-3 pt-3 border-t border-border/60">
+              <h4 className="text-xs font-semibold text-foreground flex items-center gap-1.5">
                 <Video className="h-3.5 w-3.5 text-red-500" />
                 <span>رابط فيديو YouTube (اختياري)</span>
               </h4>
@@ -495,8 +495,8 @@ export function ContentManager({ subject, initialContents }: ContentManagerProps
               </div>
             </div>
 
-            <div className="space-y-3 pt-2 border-t border-zinc-100 dark:border-zinc-800">
-              <h4 className="text-xs font-semibold text-zinc-900 dark:text-zinc-100 flex items-center gap-1.5">
+            <div className="space-y-3 pt-2 border-t border-border/60">
+              <h4 className="text-xs font-semibold text-foreground flex items-center gap-1.5">
                 <FileText className="h-3.5 w-3.5 text-amber-500" />
                 <span>رابط ملف PDF الخارجي (Google Drive / OneDrive) (اختياري)</span>
               </h4>
@@ -508,9 +508,9 @@ export function ContentManager({ subject, initialContents }: ContentManagerProps
               />
             </div>
 
-            <div className="space-y-3 pt-2 border-t border-zinc-100 dark:border-zinc-800">
-              <h4 className="text-xs font-semibold text-zinc-900 dark:text-zinc-100 flex items-center gap-1.5">
-                <LinkIcon className="h-3.5 w-3.5 text-blue-500" />
+            <div className="space-y-3 pt-2 border-t border-border/60">
+              <h4 className="text-xs font-semibold text-foreground flex items-center gap-1.5">
+                <LinkIcon className="h-3.5 w-3.5 text-primary" />
                 <span>رابط إضافي / مراجع (اختياري)</span>
               </h4>
               <Input
@@ -521,11 +521,11 @@ export function ContentManager({ subject, initialContents }: ContentManagerProps
               />
             </div>
 
-            <div className="space-y-1.5 pt-2 border-t border-zinc-100 dark:border-zinc-800">
-              <label className="text-xs font-medium">حالة النشر</label>
+            <div className="space-y-1.5 pt-2 border-t border-border/60">
+              <label className="text-xs font-medium text-foreground">حالة النشر</label>
               <select
                 name="is_published"
-                className="flex h-10 w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-xs dark:border-zinc-800 dark:bg-zinc-900"
+                className="flex h-10 w-full rounded-xl border border-input bg-card px-3 py-2 text-xs text-foreground focus:outline-hidden focus:ring-2 focus:ring-ring"
                 defaultValue="true"
               >
                 <option value="true">منشور ومتاح للطلاب</option>
@@ -560,11 +560,11 @@ export function ContentManager({ subject, initialContents }: ContentManagerProps
             <form onSubmit={handleEditSubmit} className="space-y-4 pt-2">
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1.5">
-                  <label className="text-xs font-medium">نوع المحتوى</label>
+                  <label className="text-xs font-medium text-foreground">نوع المحتوى</label>
                   <select
                     name="type"
                     defaultValue={selectedContent.type}
-                    className="flex h-10 w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-xs dark:border-zinc-800 dark:bg-zinc-900"
+                    className="flex h-10 w-full rounded-xl border border-input bg-card px-3 py-2 text-xs text-foreground focus:outline-hidden focus:ring-2 focus:ring-ring"
                   >
                     <option value="lecture">محاضرة</option>
                     <option value="section">سكشن / قسم</option>
@@ -572,11 +572,11 @@ export function ContentManager({ subject, initialContents }: ContentManagerProps
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-medium">حالة النشر</label>
+                  <label className="text-xs font-medium text-foreground">حالة النشر</label>
                   <select
                     name="is_published"
                     defaultValue={selectedContent.is_published ? "true" : "false"}
-                    className="flex h-10 w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-xs dark:border-zinc-800 dark:bg-zinc-900"
+                    className="flex h-10 w-full rounded-xl border border-input bg-card px-3 py-2 text-xs text-foreground focus:outline-hidden focus:ring-2 focus:ring-ring"
                   >
                     <option value="true">منشور للطلاب</option>
                     <option value="false">مسودة (مخفي)</option>
@@ -585,7 +585,7 @@ export function ContentManager({ subject, initialContents }: ContentManagerProps
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-medium">العنوان</label>
+                <label className="text-xs font-medium text-foreground">العنوان</label>
                 <Input
                   name="title"
                   defaultValue={selectedContent.title}
@@ -595,7 +595,7 @@ export function ContentManager({ subject, initialContents }: ContentManagerProps
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-medium">الوصف</label>
+                <label className="text-xs font-medium text-foreground">الوصف</label>
                 <Textarea
                   name="description"
                   defaultValue={selectedContent.description || ""}
@@ -605,8 +605,8 @@ export function ContentManager({ subject, initialContents }: ContentManagerProps
               </div>
 
               {/* Edit Resources */}
-              <div className="space-y-3 pt-3 border-t border-zinc-100 dark:border-zinc-800">
-                <h4 className="text-xs font-semibold text-zinc-900 dark:text-zinc-100 flex items-center gap-1.5">
+              <div className="space-y-3 pt-3 border-t border-border/60">
+                <h4 className="text-xs font-semibold text-foreground flex items-center gap-1.5">
                   <Video className="h-3.5 w-3.5 text-red-500" />
                   <span>رابط فيديو YouTube</span>
                 </h4>
@@ -619,8 +619,8 @@ export function ContentManager({ subject, initialContents }: ContentManagerProps
                 />
               </div>
 
-              <div className="space-y-3 pt-2 border-t border-zinc-100 dark:border-zinc-800">
-                <h4 className="text-xs font-semibold text-zinc-900 dark:text-zinc-100 flex items-center gap-1.5">
+              <div className="space-y-3 pt-2 border-t border-border/60">
+                <h4 className="text-xs font-semibold text-foreground flex items-center gap-1.5">
                   <FileText className="h-3.5 w-3.5 text-amber-500" />
                   <span>رابط ملف PDF الخارجي</span>
                 </h4>
@@ -633,9 +633,9 @@ export function ContentManager({ subject, initialContents }: ContentManagerProps
                 />
               </div>
 
-              <div className="space-y-3 pt-2 border-t border-zinc-100 dark:border-zinc-800">
-                <h4 className="text-xs font-semibold text-zinc-900 dark:text-zinc-100 flex items-center gap-1.5">
-                  <LinkIcon className="h-3.5 w-3.5 text-blue-500" />
+              <div className="space-y-3 pt-2 border-t border-border/60">
+                <h4 className="text-xs font-semibold text-foreground flex items-center gap-1.5">
+                  <LinkIcon className="h-3.5 w-3.5 text-primary" />
                   <span>رابط خارجي إضافي</span>
                 </h4>
                 <Input
@@ -665,7 +665,7 @@ export function ContentManager({ subject, initialContents }: ContentManagerProps
       <Dialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
         <DialogContent className="max-w-sm">
           <DialogHeader>
-            <DialogTitle className="text-rose-600">تأكيد حذف المحتوى</DialogTitle>
+            <DialogTitle className="text-destructive">تأكيد حذف المحتوى</DialogTitle>
             <DialogDescription>
               هل أنت متأكد من حذف <strong>{selectedContent?.title}</strong>؟ سيتم حذف جميع المرفقات وسجلات التقدم المرتبطة بها.
             </DialogDescription>

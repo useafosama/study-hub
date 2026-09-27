@@ -5,7 +5,7 @@ export function LandingFooter() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-slate-200/80 bg-white/70 backdrop-blur-2xl py-10">
+    <footer className="border-t border-border/70 bg-card/60 backdrop-blur-2xl py-10">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-between gap-6">
         
         {/* Brand */}
@@ -14,33 +14,33 @@ export function LandingFooter() {
             <GraduationCap className="h-4.5 w-4.5" />
           </div>
           <div className="flex flex-col text-right">
-            <span className="font-bold text-sm text-slate-900">
+            <span className="font-bold text-sm text-foreground">
               منصة الچوو التعليمية
             </span>
-            <span className="text-[11px] text-slate-500 font-medium">
+            <span className="text-[11px] text-muted-foreground font-medium">
               بإشراف يوسف أسامة
             </span>
           </div>
         </div>
 
         {/* Links */}
-        <div className="flex items-center gap-6 text-xs font-semibold text-slate-500">
-          <a href="#features" className="hover:text-blue-600 transition-colors">
+        <div className="flex items-center gap-6 text-xs font-semibold text-muted-foreground">
+          <a href="#features" className="hover:text-primary transition-colors">
             المميزات
           </a>
-          <a href="#guide" className="hover:text-blue-600 transition-colors">
+          <a href="#guide" className="hover:text-primary transition-colors">
             دليل الاستخدام
           </a>
-          <a href="#faq" className="hover:text-blue-600 transition-colors">
+          <a href="#faq" className="hover:text-primary transition-colors">
             الأسئلة الشائعة
           </a>
-          <Link href="/login" className="hover:text-blue-600 font-bold transition-colors">
+          <Link href="/login" className="hover:text-primary font-bold transition-colors">
             تسجيل الدخول
           </Link>
         </div>
 
         {/* Copyright */}
-        <div className="text-xs text-slate-400 text-center md:text-left font-medium">
+        <div className="text-xs text-muted-foreground text-center md:text-left font-medium">
           © {currentYear} جميع الحقوق محفوظة لـ منصة الچوو | يوسف أسامة
         </div>
 
@@ -48,3 +48,4 @@ export function LandingFooter() {
     </footer>
   );
 }
+

@@ -50,10 +50,10 @@ export function ContinueLearningWidget({ fallbackContent }: { fallbackContent?: 
   if (!activeItem) return null;
 
   return (
-    <div className="relative rounded-3xl overflow-hidden border border-blue-500/30 bg-gradient-to-r from-blue-600/10 via-indigo-600/10 to-purple-600/5 dark:from-blue-950/40 dark:via-indigo-950/30 dark:to-zinc-900/40 p-6 backdrop-blur-xl shadow-lg shadow-blue-500/5">
+    <div className="relative rounded-3xl overflow-hidden border border-primary/30 bg-gradient-to-r from-blue-600/10 via-indigo-600/10 to-purple-600/5 dark:from-blue-950/40 dark:via-indigo-950/30 dark:to-card p-6 backdrop-blur-xl shadow-lg shadow-blue-500/5">
       
       {/* Background soft ambient highlight */}
-      <div className="pointer-events-none absolute -top-12 -left-12 w-48 h-48 bg-blue-500/15 rounded-full blur-2xl" />
+      <div className="pointer-events-none absolute -top-12 -left-12 w-48 h-48 bg-primary/15 rounded-full blur-2xl" />
 
       <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-5">
         <div className="flex items-start gap-4">
@@ -63,20 +63,20 @@ export function ContinueLearningWidget({ fallbackContent }: { fallbackContent?: 
 
           <div className="space-y-1.5">
             <div className="flex items-center gap-2">
-              <span className="inline-flex items-center gap-1 text-[11px] font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/80 px-2.5 py-0.5 rounded-md border border-blue-500/20">
+              <span className="inline-flex items-center gap-1 text-[11px] font-bold text-primary bg-primary/10 px-2.5 py-0.5 rounded-md border border-primary/20">
                 <Sparkles className="h-3 w-3" />
                 استئناف المحاضرة الأخيرة
               </span>
-              <span className="text-[10px] font-mono font-bold uppercase text-zinc-500 bg-zinc-100 dark:bg-zinc-800 px-2 py-0.5 rounded-md">
+              <span className="text-[10px] font-mono font-bold uppercase text-muted-foreground bg-muted px-2 py-0.5 rounded-md">
                 {activeItem.subjectCode || activeItem.subjects?.code}
               </span>
             </div>
 
-            <h3 className="text-base sm:text-lg font-bold text-zinc-900 dark:text-zinc-100">
+            <h3 className="text-base sm:text-lg font-bold text-foreground">
               {activeItem.contentTitle || activeItem.title}
             </h3>
 
-            <p className="text-xs text-zinc-500 dark:text-zinc-400">
+            <p className="text-xs text-muted-foreground">
               المقرر: {activeItem.subjectName || activeItem.subjects?.name}
             </p>
           </div>
@@ -96,3 +96,4 @@ export function ContinueLearningWidget({ fallbackContent }: { fallbackContent?: 
     </div>
   );
 }
+

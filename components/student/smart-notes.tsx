@@ -9,7 +9,7 @@ import {
   Copy, 
   Sparkles, 
   ChevronDown, 
-  ChevronUp,
+  ChevronUp, 
   Download
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -99,11 +99,11 @@ export function SmartNotes({
   };
 
   return (
-    <div className="rounded-3xl border border-blue-500/30 bg-gradient-to-br from-blue-50/40 via-white to-indigo-50/20 dark:from-blue-950/20 dark:via-zinc-900/60 dark:to-indigo-950/20 backdrop-blur-xl overflow-hidden shadow-sm">
+    <div className="rounded-3xl border border-primary/30 bg-gradient-to-br from-primary/5 via-card to-card backdrop-blur-xl overflow-hidden shadow-xs">
       {/* Header Bar */}
       <div 
         onClick={() => setIsOpen(!isOpen)}
-        className="p-4 sm:p-5 flex items-center justify-between cursor-pointer select-none hover:bg-blue-500/5 transition-colors"
+        className="p-4 sm:p-5 flex items-center justify-between cursor-pointer select-none hover:bg-muted/50 transition-colors"
       >
         <div className="flex items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/20">
@@ -111,14 +111,14 @@ export function SmartNotes({
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="text-sm sm:text-base font-bold text-zinc-900 dark:text-zinc-50">
+              <h3 className="text-sm sm:text-base font-bold text-foreground">
                 دفتر ملاحظاتي الذكي
               </h3>
               {noteText && (
-                <span className="h-2 w-2 rounded-full bg-blue-600 animate-pulse" />
+                <span className="h-2 w-2 rounded-full bg-primary animate-pulse" />
               )}
             </div>
-            <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
+            <p className="text-[11px] text-muted-foreground">
               {lastSavedTime ? `آخر حفظ: ${lastSavedTime}` : "دوّن نقاطك وتلخيصاتك الهامة أثناء المشاهدة"}
             </p>
           </div>
@@ -126,22 +126,22 @@ export function SmartNotes({
 
         <div className="flex items-center gap-2">
           {isOpen ? (
-            <ChevronUp className="h-5 w-5 text-zinc-400" />
+            <ChevronUp className="h-5 w-5 text-muted-foreground" />
           ) : (
-            <ChevronDown className="h-5 w-5 text-zinc-400" />
+            <ChevronDown className="h-5 w-5 text-muted-foreground" />
           )}
         </div>
       </div>
 
       {/* Expandable Note Area */}
       {isOpen && (
-        <div className="p-4 sm:p-5 pt-0 space-y-3.5 border-t border-blue-500/10 dark:border-zinc-800/80">
+        <div className="p-4 sm:p-5 pt-0 space-y-3.5 border-t border-border">
           <div className="relative mt-3">
             <Textarea
               value={noteText}
               onChange={(e) => setNoteText(e.target.value)}
               placeholder="اكتب ملاحظاتك، القوانين، النقاط الهامة، أو أسئلتك هنا..."
-              className="min-h-[140px] rounded-2xl bg-white/80 dark:bg-zinc-950/80 border-blue-200/80 dark:border-zinc-800 focus:border-blue-500 text-xs sm:text-sm leading-relaxed p-4 resize-y"
+              className="min-h-[140px] rounded-2xl bg-background/80 border-input focus:border-primary text-xs sm:text-sm leading-relaxed p-4 resize-y"
             />
           </div>
 
@@ -154,7 +154,7 @@ export function SmartNotes({
                     variant="outline"
                     size="sm"
                     onClick={handleCopy}
-                    className="rounded-xl text-xs gap-1.5 h-8 border-zinc-200 dark:border-zinc-800"
+                    className="rounded-xl text-xs gap-1.5 h-8 border-border"
                     title="نسخ الملاحظات"
                   >
                     <Copy className="h-3.5 w-3.5" />
@@ -166,7 +166,7 @@ export function SmartNotes({
                     variant="outline"
                     size="sm"
                     onClick={handleDownload}
-                    className="rounded-xl text-xs gap-1.5 h-8 border-zinc-200 dark:border-zinc-800"
+                    className="rounded-xl text-xs gap-1.5 h-8 border-border"
                     title="تنزيل كملف نصي"
                   >
                     <Download className="h-3.5 w-3.5" />
@@ -178,7 +178,7 @@ export function SmartNotes({
                     variant="ghost"
                     size="sm"
                     onClick={handleDelete}
-                    className="rounded-xl text-xs text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 h-8"
+                    className="rounded-xl text-xs text-rose-600 hover:bg-rose-500/10 h-8"
                     title="حذف الملاحظة"
                   >
                     <Trash2 className="h-3.5 w-3.5" />
@@ -191,7 +191,7 @@ export function SmartNotes({
               type="button"
               size="sm"
               onClick={handleSave}
-              className="rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-xs gap-1.5 h-8.5 px-4 shadow-sm"
+              className="rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-xs gap-1.5 h-8.5 px-4 shadow-xs"
             >
               {isSaved ? <Check className="h-3.5 w-3.5" /> : <Save className="h-3.5 w-3.5" />}
               <span>{isSaved ? "تم الحفظ ✓" : "حفظ الملاحظة"}</span>
@@ -202,3 +202,4 @@ export function SmartNotes({
     </div>
   );
 }
+

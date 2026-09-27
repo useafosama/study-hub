@@ -3,23 +3,23 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const badgeVariants = cva(
-  "inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+  "inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-bold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
   {
     variants: {
       variant: {
         default:
-          "border-transparent bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300",
+          "border-transparent bg-primary/10 text-primary border border-primary/20",
         secondary:
-          "border-transparent bg-zinc-100 text-zinc-800 dark:bg-zinc-800 dark:text-zinc-300",
+          "border-transparent bg-secondary text-secondary-foreground border border-border/60",
         destructive:
-          "border-transparent bg-rose-100 text-rose-800 dark:bg-rose-900/50 dark:text-rose-300",
+          "border-transparent bg-destructive/10 text-destructive border border-destructive/20",
         success:
-          "border-transparent bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300",
+          "border-transparent bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20",
         warning:
-          "border-transparent bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300",
+          "border-transparent bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20",
         purple:
-          "border-transparent bg-purple-100 text-purple-800 dark:bg-purple-900/50 dark:text-purple-300",
-        outline: "text-zinc-800 border border-zinc-200 dark:text-zinc-300 dark:border-zinc-700",
+          "border-transparent bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20",
+        outline: "text-foreground border border-border bg-card/60",
       },
     },
     defaultVariants: {

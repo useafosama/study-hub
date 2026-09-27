@@ -107,12 +107,12 @@ export function ContentViewer({
     <div className="space-y-6 max-w-4xl mx-auto">
       {/* Top Header & Breadcrumb */}
       <div className="flex items-center justify-between gap-4">
-        <div className="flex items-center gap-2 text-xs text-zinc-500 dark:text-zinc-400">
-          <Link href={`/subjects/${subject.id}`} className="hover:text-zinc-900 dark:hover:text-zinc-100 flex items-center gap-1.5 transition-colors">
-            <BookOpen className="h-3.5 w-3.5 text-blue-600" />
+        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+          <Link href={`/subjects/${subject.id}`} className="hover:text-foreground flex items-center gap-1.5 transition-colors">
+            <BookOpen className="h-3.5 w-3.5 text-primary" />
             <span>{subject.name}</span>
           </Link>
-          <ChevronRight className="h-3.5 w-3.5 rotate-180 text-zinc-400" />
+          <ChevronRight className="h-3.5 w-3.5 rotate-180 text-muted-foreground" />
           <Badge variant={content.type === "lecture" ? "default" : "purple"} className="text-[10px]">
             {content.type === "lecture" ? "محاضرة" : "سكشن"}
           </Badge>
@@ -126,7 +126,7 @@ export function ContentViewer({
             onClick={handleToggleBookmark}
             className={`rounded-xl gap-1.5 text-xs transition-all ${
               isBookmarked
-                ? "bg-amber-50 text-amber-800 border-amber-300 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800"
+                ? "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30"
                 : ""
             }`}
           >
@@ -141,11 +141,11 @@ export function ContentViewer({
             onClick={handleToggleCompleted}
             className={`rounded-xl gap-1.5 text-xs transition-all ${
               isCompleted
-                ? "bg-emerald-100 text-emerald-800 hover:bg-emerald-200 dark:bg-emerald-950/50 dark:text-emerald-300 dark:hover:bg-emerald-900/60"
+                ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/20"
                 : ""
             }`}
           >
-            <CheckCircle2 className={`h-4 w-4 ${isCompleted ? "text-emerald-600 dark:text-emerald-400 fill-emerald-100" : ""}`} />
+            <CheckCircle2 className={`h-4 w-4 ${isCompleted ? "text-emerald-600 dark:text-emerald-400 fill-emerald-500/20" : ""}`} />
             <span>{isCompleted ? "تم الإكمال ✓" : "تحديد كمكتمل"}</span>
           </Button>
         </div>
@@ -153,11 +153,11 @@ export function ContentViewer({
 
       {/* Main Title & Description */}
       <div className="space-y-2">
-        <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+        <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">
           {content.title}
         </h1>
         {content.description && (
-          <p className="text-sm text-zinc-600 dark:text-zinc-400 whitespace-pre-wrap leading-relaxed">
+          <p className="text-sm text-muted-foreground whitespace-pre-wrap leading-relaxed">
             {content.description}
           </p>
         )}
@@ -172,7 +172,7 @@ export function ContentViewer({
           />
         </div>
       ) : (
-        <div className="p-8 rounded-2xl border border-dashed border-zinc-200 dark:border-zinc-800 text-center text-xs text-zinc-400 bg-zinc-50/50 dark:bg-zinc-900/20">
+        <div className="p-8 rounded-2xl border border-dashed border-border text-center text-xs text-muted-foreground bg-muted/20">
           لا يوجد مقطع فيديو مرفق بهذه المحاضرة
         </div>
       )}
@@ -188,8 +188,8 @@ export function ContentViewer({
 
       {/* Materials & Attachments Section */}
       {(pdfResources.length > 0 || linkResources.length > 0) && (
-        <div className="space-y-3 pt-4 border-t border-zinc-200/80 dark:border-zinc-800/80">
-          <h2 className="text-base font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
+        <div className="space-y-3 pt-4 border-t border-border/60">
+          <h2 className="text-base font-bold text-foreground flex items-center gap-2">
             <FileText className="h-4 w-4 text-red-500" />
             الملفات والمرفقات الدراسية
           </h2>
@@ -202,17 +202,17 @@ export function ContentViewer({
             {linkResources.map((link) => (
               <div
                 key={link.id}
-                className="flex items-center justify-between p-4 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white/60 dark:bg-zinc-900/60 backdrop-blur-sm shadow-sm"
+                className="flex items-center justify-between p-4 rounded-2xl border border-border bg-card/60 backdrop-blur-sm shadow-xs"
               >
                 <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600 dark:bg-blue-950/40 dark:text-blue-400">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
                     <LinkIcon className="h-5 w-5" />
                   </div>
                   <div>
-                    <h4 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+                    <h4 className="text-sm font-semibold text-foreground">
                       {link.title}
                     </h4>
-                    <p className="text-xs text-zinc-400">رابط خارجي معتمد</p>
+                    <p className="text-xs text-muted-foreground">رابط خارجي معتمد</p>
                   </div>
                 </div>
                 <Button asChild variant="outline" size="sm" className="rounded-xl gap-1.5 text-xs">
@@ -228,13 +228,13 @@ export function ContentViewer({
       )}
 
       {/* Navigation Footer (Previous / Next) */}
-      <div className="pt-6 border-t border-zinc-200/80 dark:border-zinc-800/80 flex items-center justify-between gap-4">
+      <div className="pt-6 border-t border-border/60 flex items-center justify-between gap-4">
         {prevContent ? (
           <Button asChild variant="outline" className="rounded-xl gap-2 text-xs flex-1 sm:flex-none justify-start">
             <Link href={`/content/${prevContent.id}`}>
               <ArrowRight className="h-4 w-4" />
               <div className="text-right">
-                <span className="block text-[10px] text-zinc-400">المحتوى السابق</span>
+                <span className="block text-[10px] text-muted-foreground">المحتوى السابق</span>
                 <span className="font-semibold line-clamp-1">{prevContent.title}</span>
               </div>
             </Link>
@@ -247,7 +247,7 @@ export function ContentViewer({
           <Button asChild variant="default" className="rounded-xl gap-2 text-xs flex-1 sm:flex-none justify-end">
             <Link href={`/content/${nextContent.id}`}>
               <div className="text-left">
-                <span className="block text-[10px] text-blue-200">المحتوى التالي</span>
+                <span className="block text-[10px] text-primary-foreground/70">المحتوى التالي</span>
                 <span className="font-semibold line-clamp-1">{nextContent.title}</span>
               </div>
               <ArrowLeft className="h-4 w-4" />
@@ -258,3 +258,4 @@ export function ContentViewer({
     </div>
   );
 }
+

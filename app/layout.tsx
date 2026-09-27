@@ -50,12 +50,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ar" dir="rtl" suppressHydrationWarning className={cairo.variable}>
-      <body className="min-h-screen bg-slate-50 text-slate-900 font-sans antialiased selection:bg-blue-600 selection:text-white relative">
+      <body className="min-h-screen bg-background text-foreground font-sans antialiased selection:bg-primary selection:text-primary-foreground relative bg-mesh">
         <ThemeProvider
           attribute="class"
-          forcedTheme="light"
-          enableSystem={false}
-          disableTransitionOnChange
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange={false}
         >
           {children}
           <Toaster

@@ -186,10 +186,10 @@ export function SubjectsManager({ initialSubjects }: SubjectsManagerProps) {
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">
             إدارة المواد والمناهج
           </h1>
-          <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">
+          <p className="text-sm text-muted-foreground mt-1">
             إضافة المواد، إدارة المحاضرات والأقسام، وتنظيم ترتيب العرض للطلاب
           </p>
         </div>
@@ -202,7 +202,7 @@ export function SubjectsManager({ initialSubjects }: SubjectsManagerProps) {
 
       {/* Search Bar */}
       <div className="relative max-w-md">
-        <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400 pointer-events-none" />
+        <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
         <Input
           placeholder="بحث بالاسم أو رمز المادة..."
           value={searchQuery}
@@ -228,7 +228,7 @@ export function SubjectsManager({ initialSubjects }: SubjectsManagerProps) {
           {filteredSubjects.map((subject, index) => (
             <Card
               key={subject.id}
-              className="apple-card p-5 flex flex-col justify-between hover:border-zinc-300 dark:hover:border-zinc-700 transition-all relative overflow-hidden"
+              className="apple-card p-5 flex flex-col justify-between hover:border-primary/40 transition-all relative overflow-hidden"
             >
               <div className="space-y-3">
                 {/* Header with status badge & dropdown */}
@@ -249,7 +249,7 @@ export function SubjectsManager({ initialSubjects }: SubjectsManagerProps) {
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-7 w-7 rounded-lg text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200"
+                      className="h-7 w-7 rounded-lg text-muted-foreground hover:text-foreground"
                       disabled={index === 0}
                       onClick={() => handleMove(index, "up")}
                       title="تحريك لأعلى"
@@ -259,7 +259,7 @@ export function SubjectsManager({ initialSubjects }: SubjectsManagerProps) {
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-7 w-7 rounded-lg text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200"
+                      className="h-7 w-7 rounded-lg text-muted-foreground hover:text-foreground"
                       disabled={index === filteredSubjects.length - 1}
                       onClick={() => handleMove(index, "down")}
                       title="تحريك لأسفل"
@@ -269,8 +269,8 @@ export function SubjectsManager({ initialSubjects }: SubjectsManagerProps) {
 
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="h-7 w-7 rounded-lg">
-                          <MoreVertical className="h-4 w-4 text-zinc-400" />
+                        <Button variant="ghost" size="icon" className="h-7 w-7 rounded-lg text-muted-foreground hover:text-foreground">
+                          <MoreVertical className="h-4 w-4" />
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end" className="w-40">
@@ -306,19 +306,19 @@ export function SubjectsManager({ initialSubjects }: SubjectsManagerProps) {
 
                 {/* Subject Title and Description */}
                 <div>
-                  <h3 className="font-bold text-base text-zinc-900 dark:text-zinc-100">
+                  <h3 className="font-bold text-base text-foreground">
                     {subject.name}
                   </h3>
-                  <p className="text-xs text-zinc-500 dark:text-zinc-400 line-clamp-2 mt-1">
+                  <p className="text-xs text-muted-foreground line-clamp-2 mt-1">
                     {subject.description || "لا يوجد وصف لهذه المادة حتى الآن"}
                   </p>
                 </div>
               </div>
 
               {/* Footer with content counter and action button */}
-              <div className="pt-4 mt-4 border-t border-zinc-100 dark:border-zinc-800/80 flex items-center justify-between">
-                <div className="flex items-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-400">
-                  <Layers className="h-4 w-4 text-zinc-400" />
+              <div className="pt-4 mt-4 border-t border-border/60 flex items-center justify-between">
+                <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                  <Layers className="h-4 w-4" />
                   <span>{subject.total_contents || 0} محاضرة وقسم</span>
                 </div>
 
@@ -346,7 +346,7 @@ export function SubjectsManager({ initialSubjects }: SubjectsManagerProps) {
 
           <form onSubmit={handleCreateSubmit} className="space-y-4 pt-2">
             <div className="space-y-1.5">
-              <label className="text-xs font-medium">اسم المادة</label>
+              <label className="text-xs font-medium text-foreground">اسم المادة</label>
               <Input
                 name="name"
                 placeholder="مثال: تكنولوجيا النانو (Nano Technology)"
@@ -357,7 +357,7 @@ export function SubjectsManager({ initialSubjects }: SubjectsManagerProps) {
 
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <label className="text-xs font-medium">رمز المادة (Code)</label>
+                <label className="text-xs font-medium text-foreground">رمز المادة (Code)</label>
                 <Input
                   name="code"
                   placeholder="NANO101"
@@ -368,10 +368,10 @@ export function SubjectsManager({ initialSubjects }: SubjectsManagerProps) {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-medium">حالة النشر</label>
+                <label className="text-xs font-medium text-foreground">حالة النشر</label>
                 <select
                   name="is_published"
-                  className="flex h-10 w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-xs dark:border-zinc-800 dark:bg-zinc-900"
+                  className="flex h-10 w-full rounded-xl border border-input bg-card px-3 py-2 text-xs text-foreground focus:outline-hidden focus:ring-2 focus:ring-ring"
                   defaultValue="true"
                 >
                   <option value="true">منشور ومتاح للطلاب</option>
@@ -381,7 +381,7 @@ export function SubjectsManager({ initialSubjects }: SubjectsManagerProps) {
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-medium">وصف مختصر</label>
+              <label className="text-xs font-medium text-foreground">وصف مختصر</label>
               <Textarea
                 name="description"
                 placeholder="مقدمة موجزة عن المادة ومحتوياتها..."
@@ -416,7 +416,7 @@ export function SubjectsManager({ initialSubjects }: SubjectsManagerProps) {
           {selectedSubject && (
             <form onSubmit={handleEditSubmit} className="space-y-4 pt-2">
               <div className="space-y-1.5">
-                <label className="text-xs font-medium">اسم المادة</label>
+                <label className="text-xs font-medium text-foreground">اسم المادة</label>
                 <Input
                   name="name"
                   defaultValue={selectedSubject.name}
@@ -427,7 +427,7 @@ export function SubjectsManager({ initialSubjects }: SubjectsManagerProps) {
 
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1.5">
-                  <label className="text-xs font-medium">رمز المادة (Code)</label>
+                  <label className="text-xs font-medium text-foreground">رمز المادة (Code)</label>
                   <Input
                     name="code"
                     defaultValue={selectedSubject.code}
@@ -438,10 +438,10 @@ export function SubjectsManager({ initialSubjects }: SubjectsManagerProps) {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-medium">حالة النشر</label>
+                  <label className="text-xs font-medium text-foreground">حالة النشر</label>
                   <select
                     name="is_published"
-                    className="flex h-10 w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-xs dark:border-zinc-800 dark:bg-zinc-900"
+                    className="flex h-10 w-full rounded-xl border border-input bg-card px-3 py-2 text-xs text-foreground focus:outline-hidden focus:ring-2 focus:ring-ring"
                     defaultValue={selectedSubject.is_published ? "true" : "false"}
                   >
                     <option value="true">منشور ومتاح للطلاب</option>
@@ -451,7 +451,7 @@ export function SubjectsManager({ initialSubjects }: SubjectsManagerProps) {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-medium">الوصف</label>
+                <label className="text-xs font-medium text-foreground">الوصف</label>
                 <Textarea
                   name="description"
                   defaultValue={selectedSubject.description || ""}
@@ -478,10 +478,10 @@ export function SubjectsManager({ initialSubjects }: SubjectsManagerProps) {
       <Dialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
         <DialogContent className="max-w-sm">
           <DialogHeader>
-            <DialogTitle className="text-rose-600">تأكيد حذف المادة</DialogTitle>
+            <DialogTitle className="text-destructive">تأكيد حذف المادة</DialogTitle>
             <DialogDescription>
               هل أنت متأكد من رغبتك في حذف مادة{" "}
-              <strong>{selectedSubject?.name}</strong>؟ سيؤدي ذلك إلى حذف جميع المحاضرات والسكاشن والمرفقات التابعة لها نهائياً.
+              <strong className="text-foreground">{selectedSubject?.name}</strong>؟ سيؤدي ذلك إلى حذف جميع المحاضرات والسكاشن والمرفقات التابعة لها نهائياً.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="pt-4">

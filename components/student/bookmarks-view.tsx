@@ -48,10 +48,10 @@ export function BookmarksView({ initialBookmarks }: BookmarksViewProps) {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+        <h1 className="text-2xl font-bold tracking-tight text-foreground">
           المحاضرات والمحتويات المحفوظة
         </h1>
-        <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">
+        <p className="text-sm text-muted-foreground mt-1">
           قائمة المحاضرات والسكاشن التي قمت بتمييزها للرجوع إليها سريعاً
         </p>
       </div>
@@ -80,7 +80,7 @@ export function BookmarksView({ initialBookmarks }: BookmarksViewProps) {
             return (
               <Card
                 key={b.content_id}
-                className="apple-card p-4 hover:border-zinc-300 dark:hover:border-zinc-700 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+                className="apple-card p-4 hover:border-primary/40 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4"
               >
                 <div className="space-y-1.5 min-w-0">
                   <div className="flex flex-wrap items-center gap-2">
@@ -90,16 +90,16 @@ export function BookmarksView({ initialBookmarks }: BookmarksViewProps) {
                     <Badge variant={content.type === "lecture" ? "default" : "purple"} className="text-[10px]">
                       {content.type === "lecture" ? "محاضرة" : "سكشن"}
                     </Badge>
-                    <span className="font-bold text-sm text-zinc-900 dark:text-zinc-100 truncate">
+                    <span className="font-bold text-sm text-foreground truncate">
                       {content.title}
                     </span>
                   </div>
 
-                  <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                  <p className="text-xs text-muted-foreground">
                     مادة {subject?.name} • حُفظت في {formatDate(b.created_at)}
                   </p>
 
-                  <div className="flex items-center gap-2 pt-1 text-[11px] text-zinc-400">
+                  <div className="flex items-center gap-2 pt-1 text-[11px] text-muted-foreground">
                     {hasVideo && (
                       <span className="flex items-center gap-1 text-red-600 dark:text-red-400">
                         <Video className="h-3 w-3" />
@@ -120,13 +120,13 @@ export function BookmarksView({ initialBookmarks }: BookmarksViewProps) {
                     variant="ghost"
                     size="sm"
                     onClick={() => handleRemoveBookmark(b.content_id)}
-                    className="h-8 rounded-xl text-xs text-zinc-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30 gap-1.5"
+                    className="h-8 rounded-xl text-xs text-muted-foreground hover:text-rose-600 hover:bg-rose-500/10 gap-1.5"
                   >
                     <Trash2 className="h-3.5 w-3.5" />
                     <span>إزالة</span>
                   </Button>
 
-                  <Button asChild size="sm" className="h-8 rounded-xl text-xs gap-1.5 font-medium shadow-sm">
+                  <Button asChild size="sm" className="h-8 rounded-xl text-xs gap-1.5 font-medium shadow-xs">
                     <Link href={`/content/${b.content_id}`}>
                       <span>فتح</span>
                       <ArrowLeft className="h-3.5 w-3.5" />
@@ -141,3 +141,4 @@ export function BookmarksView({ initialBookmarks }: BookmarksViewProps) {
     </div>
   );
 }
+

@@ -59,10 +59,10 @@ export default async function AdminActivityPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+        <h1 className="text-2xl font-bold tracking-tight text-foreground">
           سجل نشاطات النظام
         </h1>
-        <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">
+        <p className="text-sm text-muted-foreground mt-1">
           سجل تدقيق كامل للعمليات الإدارية وتفاعلات المستخدمين على المنصة
         </p>
       </div>
@@ -74,16 +74,16 @@ export default async function AdminActivityPage() {
           description="ستظهر هنا كافة العمليات والإجراءات الإدارية المنجزة في المنصة"
         />
       ) : (
-        <Card className="rounded-2xl border-zinc-200/80 dark:border-zinc-800/80 overflow-hidden divide-y divide-zinc-100 dark:divide-zinc-800">
+        <Card className="rounded-2xl border-border/80 overflow-hidden divide-y divide-border/60 bg-card/60 backdrop-blur-md">
           {logs.map((log) => {
             const actionInfo = getActionDetails(log.action);
             return (
               <div
                 key={log.id}
-                className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-zinc-50/50 dark:hover:bg-zinc-800/30 transition-colors text-xs"
+                className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-secondary/30 transition-colors text-xs"
               >
                 <div className="flex items-start sm:items-center gap-3">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-secondary/60 text-muted-foreground">
                     <Activity className="h-4 w-4" />
                   </div>
                   <div className="space-y-1">
@@ -91,16 +91,16 @@ export default async function AdminActivityPage() {
                       <Badge variant={actionInfo.variant} className="text-[10px]">
                         {actionInfo.label}
                       </Badge>
-                      <span className="font-semibold text-zinc-900 dark:text-zinc-100">
+                      <span className="font-semibold text-foreground">
                         {log.user_full_name}
                       </span>
-                      <span className="text-[11px] text-zinc-400 dir-ltr text-right">
+                      <span className="text-[11px] text-muted-foreground dir-ltr text-right">
                         (@{log.user_username})
                       </span>
                     </div>
 
                     {log.metadata && Object.keys(log.metadata).length > 0 && (
-                      <p className="text-zinc-500 dark:text-zinc-400 text-[11px]">
+                      <p className="text-muted-foreground text-[11px]">
                         {log.metadata.title && `العنوان: "${log.metadata.title}" `}
                         {log.metadata.name && `الاسم: "${log.metadata.name}" `}
                         {log.metadata.username && `اسم المستخدم: "${log.metadata.username}" `}
@@ -110,7 +110,7 @@ export default async function AdminActivityPage() {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-1.5 text-zinc-400 text-[11px] self-end sm:self-center shrink-0">
+                <div className="flex items-center gap-1.5 text-muted-foreground text-[11px] self-end sm:self-center shrink-0">
                   <Clock className="h-3.5 w-3.5" />
                   <span title={formatDate(log.created_at)}>
                     {formatRelativeTime(log.created_at)}

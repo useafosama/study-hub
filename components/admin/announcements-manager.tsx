@@ -163,10 +163,10 @@ export function AnnouncementsManager({
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">
             إدارة الإعلانات والتنبيهات
           </h1>
-          <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">
+          <p className="text-sm text-muted-foreground mt-1">
             نشر التنبيهات العامة أو الخاصة بمادة معينة للطلاب
           </p>
         </div>
@@ -194,7 +194,7 @@ export function AnnouncementsManager({
           {announcements.map((announcement) => (
             <Card
               key={announcement.id}
-              className="apple-card p-5 hover:border-zinc-300 dark:hover:border-zinc-700 transition-all flex flex-col md:flex-row md:items-start justify-between gap-4"
+              className="apple-card p-5 hover:border-primary/40 transition-all flex flex-col md:flex-row md:items-start justify-between gap-4"
             >
               <div className="space-y-2.5 flex-1 min-w-0">
                 <div className="flex flex-wrap items-center gap-2">
@@ -216,16 +216,16 @@ export function AnnouncementsManager({
                     <Badge variant="secondary">مخفي</Badge>
                   )}
 
-                  <span className="text-[11px] text-zinc-400 mr-auto">
+                  <span className="text-[11px] text-muted-foreground mr-auto">
                     {formatDate(announcement.created_at)}
                   </span>
                 </div>
 
                 <div>
-                  <h3 className="text-base font-bold text-zinc-900 dark:text-zinc-100">
+                  <h3 className="text-base font-bold text-foreground">
                     {announcement.title}
                   </h3>
-                  <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-1 whitespace-pre-wrap leading-relaxed">
+                  <p className="text-xs text-muted-foreground mt-1 whitespace-pre-wrap leading-relaxed">
                     {announcement.content}
                   </p>
                 </div>
@@ -244,8 +244,8 @@ export function AnnouncementsManager({
 
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg">
-                      <MoreVertical className="h-4 w-4 text-zinc-400" />
+                    <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg text-muted-foreground hover:text-foreground">
+                      <MoreVertical className="h-4 w-4" />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-36">
@@ -287,7 +287,7 @@ export function AnnouncementsManager({
 
           <form onSubmit={handleCreateSubmit} className="space-y-4 pt-2">
             <div className="space-y-1.5">
-              <label className="text-xs font-medium">عنوان الإعلان</label>
+              <label className="text-xs font-medium text-foreground">عنوان الإعلان</label>
               <Input
                 name="title"
                 placeholder="مثال: تنبيه بخصوص موعد المحاضرة القادمة"
@@ -298,12 +298,12 @@ export function AnnouncementsManager({
 
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <label className="text-xs font-medium">الجمهور المستهدف</label>
+                <label className="text-xs font-medium text-foreground">الجمهور المستهدف</label>
                 <select
                   name="target_type"
                   value={targetType}
                   onChange={(e) => setTargetType(e.target.value as any)}
-                  className="flex h-10 w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-xs dark:border-zinc-800 dark:bg-zinc-900"
+                  className="flex h-10 w-full rounded-xl border border-input bg-card px-3 py-2 text-xs text-foreground focus:outline-hidden focus:ring-2 focus:ring-ring"
                 >
                   <option value="all">عام (جميع الطلاب)</option>
                   <option value="subject">خاص بمادة محددة</option>
@@ -311,10 +311,10 @@ export function AnnouncementsManager({
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-medium">حالة النشر</label>
+                <label className="text-xs font-medium text-foreground">حالة النشر</label>
                 <select
                   name="is_published"
-                  className="flex h-10 w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-xs dark:border-zinc-800 dark:bg-zinc-900"
+                  className="flex h-10 w-full rounded-xl border border-input bg-card px-3 py-2 text-xs text-foreground focus:outline-hidden focus:ring-2 focus:ring-ring"
                   defaultValue="true"
                 >
                   <option value="true">منشور فوراً</option>
@@ -325,11 +325,11 @@ export function AnnouncementsManager({
 
             {targetType === "subject" && (
               <div className="space-y-1.5">
-                <label className="text-xs font-medium">المادة المستهدفة</label>
+                <label className="text-xs font-medium text-foreground">المادة المستهدفة</label>
                 <select
                   name="subject_id"
                   required={targetType === "subject"}
-                  className="flex h-10 w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-xs dark:border-zinc-800 dark:bg-zinc-900"
+                  className="flex h-10 w-full rounded-xl border border-input bg-card px-3 py-2 text-xs text-foreground focus:outline-hidden focus:ring-2 focus:ring-ring"
                 >
                   <option value="">اختر المادة...</option>
                   {subjects.map((sub) => (
@@ -342,7 +342,7 @@ export function AnnouncementsManager({
             )}
 
             <div className="space-y-1.5">
-              <label className="text-xs font-medium">نص الإعلان</label>
+              <label className="text-xs font-medium text-foreground">نص الإعلان</label>
               <Textarea
                 name="content"
                 placeholder="اكتب نص الإعلان والتفاصيل هنا..."
@@ -375,7 +375,7 @@ export function AnnouncementsManager({
           {selectedAnnouncement && (
             <form onSubmit={handleEditSubmit} className="space-y-4 pt-2">
               <div className="space-y-1.5">
-                <label className="text-xs font-medium">عنوان الإعلان</label>
+                <label className="text-xs font-medium text-foreground">عنوان الإعلان</label>
                 <Input
                   name="title"
                   defaultValue={selectedAnnouncement.title}
@@ -386,12 +386,12 @@ export function AnnouncementsManager({
 
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1.5">
-                  <label className="text-xs font-medium">الجمهور المستهدف</label>
+                  <label className="text-xs font-medium text-foreground">الجمهور المستهدف</label>
                   <select
                     name="target_type"
                     value={targetType}
                     onChange={(e) => setTargetType(e.target.value as any)}
-                    className="flex h-10 w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-xs dark:border-zinc-800 dark:bg-zinc-900"
+                    className="flex h-10 w-full rounded-xl border border-input bg-card px-3 py-2 text-xs text-foreground focus:outline-hidden focus:ring-2 focus:ring-ring"
                   >
                     <option value="all">عام (جميع الطلاب)</option>
                     <option value="subject">خاص بمادة محددة</option>
@@ -399,11 +399,11 @@ export function AnnouncementsManager({
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-medium">حالة النشر</label>
+                  <label className="text-xs font-medium text-foreground">حالة النشر</label>
                   <select
                     name="is_published"
                     defaultValue={selectedAnnouncement.is_published ? "true" : "false"}
-                    className="flex h-10 w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-xs dark:border-zinc-800 dark:bg-zinc-900"
+                    className="flex h-10 w-full rounded-xl border border-input bg-card px-3 py-2 text-xs text-foreground focus:outline-hidden focus:ring-2 focus:ring-ring"
                   >
                     <option value="true">منشور</option>
                     <option value="false">مخفي</option>
@@ -413,12 +413,12 @@ export function AnnouncementsManager({
 
               {targetType === "subject" && (
                 <div className="space-y-1.5">
-                  <label className="text-xs font-medium">المادة المستهدفة</label>
+                  <label className="text-xs font-medium text-foreground">المادة المستهدفة</label>
                   <select
                     name="subject_id"
                     defaultValue={selectedAnnouncement.subject_id || ""}
                     required={targetType === "subject"}
-                    className="flex h-10 w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-xs dark:border-zinc-800 dark:bg-zinc-900"
+                    className="flex h-10 w-full rounded-xl border border-input bg-card px-3 py-2 text-xs text-foreground focus:outline-hidden focus:ring-2 focus:ring-ring"
                   >
                     <option value="">اختر المادة...</option>
                     {subjects.map((sub) => (
@@ -431,7 +431,7 @@ export function AnnouncementsManager({
               )}
 
               <div className="space-y-1.5">
-                <label className="text-xs font-medium">نص الإعلان</label>
+                <label className="text-xs font-medium text-foreground">نص الإعلان</label>
                 <Textarea
                   name="content"
                   defaultValue={selectedAnnouncement.content}
@@ -459,7 +459,7 @@ export function AnnouncementsManager({
       <Dialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
         <DialogContent className="max-w-sm">
           <DialogHeader>
-            <DialogTitle className="text-rose-600">تأكيد حذف الإعلان</DialogTitle>
+            <DialogTitle className="text-destructive">تأكيد حذف الإعلان</DialogTitle>
             <DialogDescription>
               هل أنت متأكد من حذف هذا الإعلان نهائياً؟
             </DialogDescription>

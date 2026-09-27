@@ -47,10 +47,10 @@ export function SettingsManager({ initialSettings }: SettingsManagerProps) {
   return (
     <div className="space-y-6 max-w-4xl">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+        <h1 className="text-2xl font-bold tracking-tight text-foreground">
           إعدادات المنصة العامة
         </h1>
-        <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">
+        <p className="text-sm text-muted-foreground mt-1">
           تخصيص اسم المنصة، مظهر النظام الافتراضي، وإدارة وضع الصيانة
         </p>
       </div>
@@ -59,18 +59,18 @@ export function SettingsManager({ initialSettings }: SettingsManagerProps) {
         {/* General Info Card */}
         <Card className="apple-card">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-base">
-              <Globe className="h-4 w-4 text-blue-600" />
+            <CardTitle className="flex items-center gap-2 text-base text-foreground">
+              <Globe className="h-4 w-4 text-primary" />
               <span>معلومات المنصة</span>
             </CardTitle>
-            <CardDescription className="text-xs">
+            <CardDescription className="text-xs text-muted-foreground">
               تظهر هذه البيانات في شريط العنوان ورأس الصفحات للطلاب
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <label className="text-xs font-medium">اسم المنصة (بالعربية)</label>
+                <label className="text-xs font-medium text-foreground">اسم المنصة (بالعربية)</label>
                 <Input
                   name="platform_name"
                   defaultValue={initialSettings.platform_name}
@@ -80,7 +80,7 @@ export function SettingsManager({ initialSettings }: SettingsManagerProps) {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-medium">اسم المنصة (English)</label>
+                <label className="text-xs font-medium text-foreground">اسم المنصة (English)</label>
                 <Input
                   name="platform_name_en"
                   defaultValue={initialSettings.platform_name_en || "Study Hub"}
@@ -91,7 +91,7 @@ export function SettingsManager({ initialSettings }: SettingsManagerProps) {
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-medium">وصف المنصة</label>
+              <label className="text-xs font-medium text-foreground">وصف المنصة</label>
               <Textarea
                 name="description"
                 defaultValue={initialSettings.description || ""}
@@ -105,21 +105,21 @@ export function SettingsManager({ initialSettings }: SettingsManagerProps) {
         {/* Appearance & Themes */}
         <Card className="apple-card">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-base">
-              <Palette className="h-4 w-4 text-violet-600" />
+            <CardTitle className="flex items-center gap-2 text-base text-foreground">
+              <Palette className="h-4 w-4 text-violet-500" />
               <span>المظهر والتفضيلات الافتراضية</span>
             </CardTitle>
-            <CardDescription className="text-xs">
+            <CardDescription className="text-xs text-muted-foreground">
               تحديد التفضيل الافتراضي لواجهة المستخدم
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-1.5 max-w-sm">
-              <label className="text-xs font-medium">المظهر الافتراضي للزوار الجدد</label>
+              <label className="text-xs font-medium text-foreground">المظهر الافتراضي للزوار الجدد</label>
               <select
                 name="theme_default"
                 defaultValue={initialSettings.theme_default || "system"}
-                className="flex h-10 w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-xs dark:border-zinc-800 dark:bg-zinc-900"
+                className="flex h-10 w-full rounded-xl border border-input bg-card px-3 py-2 text-xs text-foreground focus:outline-hidden focus:ring-2 focus:ring-ring"
               >
                 <option value="system">تلقائي (حسب جهاز المستخدم)</option>
                 <option value="dark">داكن (Dark Mode)</option>
@@ -132,21 +132,21 @@ export function SettingsManager({ initialSettings }: SettingsManagerProps) {
         {/* Maintenance Mode */}
         <Card className="apple-card">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-base">
+            <CardTitle className="flex items-center gap-2 text-base text-foreground">
               <Shield className="h-4 w-4 text-amber-500" />
               <span>وضع الصيانة (Maintenance Mode)</span>
             </CardTitle>
-            <CardDescription className="text-xs">
+            <CardDescription className="text-xs text-muted-foreground">
               عند تفعيل هذا الخيار، سيتم تنبيه الطلاب بأن المنصة تخضع لأعمال صيانة مؤقتة
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="flex items-center justify-between p-4 rounded-xl bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800">
+            <div className="flex items-center justify-between p-4 rounded-xl bg-secondary/30 border border-border/70">
               <div className="space-y-0.5">
-                <span className="text-xs font-semibold text-zinc-900 dark:text-zinc-100">
+                <span className="text-xs font-semibold text-foreground">
                   تفعيل وضع الصيانة
                 </span>
-                <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
+                <p className="text-[11px] text-muted-foreground">
                   المشرفين فقط سيتمكنون من تصفح المنصة بشكل طبيعي
                 </p>
               </div>

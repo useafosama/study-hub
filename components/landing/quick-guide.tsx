@@ -33,17 +33,17 @@ export function QuickGuide() {
   ];
 
   return (
-    <section id="guide" className="py-20 sm:py-28 border-t border-white/80 bg-white/40 relative backdrop-blur-xl">
+    <section id="guide" className="py-20 sm:py-28 border-t border-border/60 bg-muted/20 relative backdrop-blur-xl">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         
         <div className="text-center max-w-2xl mx-auto mb-16">
-          <span className="text-xs font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-3.5 py-1 rounded-full border border-blue-200/60 shadow-xs">
+          <span className="text-xs font-bold uppercase tracking-wider text-primary bg-primary/10 px-3.5 py-1 rounded-full border border-primary/20 shadow-xs">
             خطوات الانضمام
           </span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-zinc-900 mt-4 mb-3 tracking-tight">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-foreground mt-4 mb-3 tracking-tight">
             دليل البدء السريع
           </h2>
-          <p className="text-sm sm:text-base text-zinc-600 font-normal">
+          <p className="text-sm sm:text-base text-muted-foreground font-normal">
             ابدأ رحلتك التعليمية خلال 4 خطوات بسيطة وسريعة
           </p>
         </div>
@@ -58,7 +58,7 @@ export function QuickGuide() {
               >
                 <div>
                   <div className="flex items-center justify-between mb-6">
-                    <span className="text-3xl font-black bg-gradient-to-br from-zinc-400 to-zinc-200 bg-clip-text text-transparent font-mono group-hover:from-blue-600 group-hover:to-indigo-600 transition-all duration-300">
+                    <span className="text-3xl font-black bg-gradient-to-br from-muted-foreground/50 to-muted-foreground/20 bg-clip-text text-transparent font-mono group-hover:from-blue-600 group-hover:to-indigo-600 transition-all duration-300">
                       {step.number}
                     </span>
                     <div className={`h-12 w-12 rounded-2xl bg-gradient-to-tr ${step.gradient} text-white flex items-center justify-center shadow-md shadow-blue-500/20 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300`}>
@@ -66,16 +66,16 @@ export function QuickGuide() {
                     </div>
                   </div>
 
-                  <h3 className="text-base sm:text-lg font-bold text-zinc-900 mb-2">
+                  <h3 className="text-base sm:text-lg font-bold text-foreground mb-2">
                     {step.title}
                   </h3>
 
-                  <p className="text-xs sm:text-sm text-zinc-600 leading-relaxed">
+                  <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
                     {step.desc}
                   </p>
                 </div>
 
-                <div className="mt-6 pt-4 border-t border-zinc-100 flex items-center justify-between text-[11px] font-bold text-zinc-400 group-hover:text-blue-600 transition-colors">
+                <div className="mt-6 pt-4 border-t border-border/50 flex items-center justify-between text-[11px] font-bold text-muted-foreground group-hover:text-primary transition-colors">
                   <span>الخطوة {idx + 1} من 4</span>
                   <Check className="h-3.5 w-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
                 </div>
@@ -88,3 +88,4 @@ export function QuickGuide() {
     </section>
   );
 }
+

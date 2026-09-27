@@ -59,10 +59,10 @@ export function SearchView() {
   return (
     <div className="space-y-6 max-w-4xl mx-auto">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+        <h1 className="text-2xl font-bold tracking-tight text-foreground">
           البحث في المقررات والمحتوى
         </h1>
-        <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">
+        <p className="text-sm text-muted-foreground mt-1">
           ابحث في المواد، المحاضرات، السكاشن، والملفات المخصصة لك
         </p>
       </div>
@@ -73,12 +73,12 @@ export function SearchView() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="اكتب اسم مادة، عنوان محاضرة، سكشن، أو كلمة مفتاحية..."
-          className="h-12 pr-11 pl-11 rounded-2xl text-sm shadow-sm"
+          className="h-12 pr-11 pl-11 rounded-2xl text-sm shadow-xs bg-card border-input"
           autoFocus
         />
-        <Search className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-zinc-400 pointer-events-none" />
+        <Search className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground pointer-events-none" />
         {isSearching && (
-          <Loader2 className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-blue-600 animate-spin" />
+          <Loader2 className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-primary animate-spin" />
         )}
       </div>
 
@@ -104,28 +104,28 @@ export function SearchView() {
           {/* Matching Subjects */}
           {results.subjects.length > 0 && (
             <div className="space-y-3">
-              <h3 className="text-sm font-bold text-zinc-700 dark:text-zinc-300 flex items-center gap-2">
-                <BookOpen className="h-4 w-4 text-blue-600" />
+              <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
+                <BookOpen className="h-4 w-4 text-primary" />
                 المواد المطابقة ({results.subjects.length})
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {results.subjects.map((sub) => (
                   <Link key={sub.id} href={`/subjects/${sub.id}`}>
-                    <Card className="apple-card p-4 hover:border-blue-300 dark:hover:border-blue-700 transition-all flex items-center justify-between">
+                    <Card className="apple-card p-4 hover:border-primary/40 transition-all flex items-center justify-between">
                       <div className="space-y-1 min-w-0 pr-2">
                         <Badge variant="outline" className="font-mono text-[10px] uppercase">
                           {sub.code}
                         </Badge>
-                        <h4 className="font-bold text-sm text-zinc-900 dark:text-zinc-100 truncate">
+                        <h4 className="font-bold text-sm text-foreground truncate">
                           {sub.name}
                         </h4>
                         {sub.description && (
-                          <p className="text-xs text-zinc-500 line-clamp-1">
+                          <p className="text-xs text-muted-foreground line-clamp-1">
                             {sub.description}
                           </p>
                         )}
                       </div>
-                      <ArrowLeft className="h-4 w-4 text-zinc-400 shrink-0" />
+                      <ArrowLeft className="h-4 w-4 text-muted-foreground shrink-0" />
                     </Card>
                   </Link>
                 ))}
@@ -136,24 +136,24 @@ export function SearchView() {
           {/* Matching Contents (Lectures / Sections) */}
           {results.contents.length > 0 && (
             <div className="space-y-3">
-              <h3 className="text-sm font-bold text-zinc-700 dark:text-zinc-300 flex items-center gap-2">
+              <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
                 <Sparkles className="h-4 w-4 text-amber-500" />
                 المحاضرات والسكاشن ({results.contents.length})
               </h3>
               <div className="space-y-2.5">
                 {results.contents.map((content) => (
                   <Link key={content.id} href={`/content/${content.id}`}>
-                    <Card className="apple-card p-4 hover:border-blue-300 dark:hover:border-blue-700 transition-all flex items-center justify-between">
+                    <Card className="apple-card p-4 hover:border-primary/40 transition-all flex items-center justify-between">
                       <div className="space-y-1 min-w-0 pr-2">
                         <div className="flex items-center gap-2">
                           <Badge variant={content.type === "lecture" ? "default" : "purple"} className="text-[10px]">
                             {content.type === "lecture" ? "محاضرة" : "سكشن"}
                           </Badge>
-                          <span className="font-semibold text-sm text-zinc-900 dark:text-zinc-100 truncate">
+                          <span className="font-semibold text-sm text-foreground truncate">
                             {content.title}
                           </span>
                         </div>
-                        <p className="text-xs text-zinc-500">
+                        <p className="text-xs text-muted-foreground">
                           {content.subjects?.name} ({content.subjects?.code})
                         </p>
                       </div>
@@ -171,16 +171,16 @@ export function SearchView() {
           {/* Matching Resources */}
           {results.resources.length > 0 && (
             <div className="space-y-3">
-              <h3 className="text-sm font-bold text-zinc-700 dark:text-zinc-300 flex items-center gap-2">
+              <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
                 <FileText className="h-4 w-4 text-rose-500" />
                 المرفقات والملفات ({results.resources.length})
               </h3>
               <div className="space-y-2.5">
                 {results.resources.map((res) => (
                   <Link key={res.id} href={`/content/${res.content_id}`}>
-                    <Card className="apple-card p-4 hover:border-blue-300 dark:hover:border-blue-700 transition-all flex items-center justify-between">
+                    <Card className="apple-card p-4 hover:border-primary/40 transition-all flex items-center justify-between">
                       <div className="flex items-center gap-3 min-w-0 pr-2">
-                        <div className="p-2 rounded-xl bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 shrink-0">
+                        <div className="p-2 rounded-xl bg-muted text-muted-foreground shrink-0">
                           {res.type === "video" ? (
                             <Video className="h-4 w-4 text-red-500" />
                           ) : (
@@ -188,15 +188,15 @@ export function SearchView() {
                           )}
                         </div>
                         <div className="space-y-0.5 min-w-0">
-                          <h4 className="font-semibold text-sm text-zinc-900 dark:text-zinc-100 truncate">
+                          <h4 className="font-semibold text-sm text-foreground truncate">
                             {res.title}
                           </h4>
-                          <p className="text-xs text-zinc-500">
+                          <p className="text-xs text-muted-foreground">
                             ضمن: {res.contents?.title} ({res.contents?.subjects?.name})
                           </p>
                         </div>
                       </div>
-                      <ArrowLeft className="h-4 w-4 text-zinc-400 shrink-0" />
+                      <ArrowLeft className="h-4 w-4 text-muted-foreground shrink-0" />
                     </Card>
                   </Link>
                 ))}
@@ -208,3 +208,4 @@ export function SearchView() {
     </div>
   );
 }
+

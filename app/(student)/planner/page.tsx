@@ -97,21 +97,21 @@ export default function StudyPlannerPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
               خطة المذاكرة والجدول الأسبوعي
             </h1>
-            <Badge variant="outline" className="border-blue-500/30 text-blue-600 dark:text-blue-400">
+            <Badge variant="outline" className="border-primary/30 text-primary">
               {completedCount} / {totalCount} مكتمل
             </Badge>
           </div>
-          <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 mt-1">
+          <p className="text-xs sm:text-sm text-muted-foreground mt-1">
             نظّم وقتك ووزّع مهامك ومحاضراتك على مدار أيام الأسبوع لضمان أعلى تركيز
           </p>
         </div>
 
         <Button
           onClick={() => setIsAdding(!isAdding)}
-          className="rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-xs gap-2 shadow-sm shrink-0"
+          className="rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-xs gap-2 shadow-xs shrink-0"
         >
           <Plus className="h-4 w-4" />
           <span>إضافة مهمة دراسية جديدة</span>
@@ -119,14 +119,14 @@ export default function StudyPlannerPage() {
       </div>
 
       {/* Weekly Progress Banner */}
-      <div className="rounded-3xl border border-zinc-200/80 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-5 space-y-3 shadow-xs">
+      <div className="rounded-3xl border border-border bg-card p-5 space-y-3 shadow-xs">
         <div className="flex items-center justify-between text-xs font-bold">
-          <span className="text-zinc-700 dark:text-zinc-300">نسبة إنجاز مهام الأسبوع</span>
-          <span className="text-blue-600 dark:text-blue-400">{progressPercentage}%</span>
+          <span className="text-foreground">نسبة إنجاز مهام الأسبوع</span>
+          <span className="text-primary">{progressPercentage}%</span>
         </div>
-        <div className="w-full bg-zinc-100 dark:bg-zinc-800 h-2.5 rounded-full overflow-hidden">
+        <div className="w-full bg-muted h-2.5 rounded-full overflow-hidden">
           <div
-            className="bg-gradient-to-r from-blue-600 to-indigo-600 h-full rounded-full transition-all duration-500"
+            className="bg-primary h-full rounded-full transition-all duration-500"
             style={{ width: `${progressPercentage}%` }}
           />
         </div>
@@ -136,33 +136,33 @@ export default function StudyPlannerPage() {
       {isAdding && (
         <form
           onSubmit={handleAddTask}
-          className="rounded-3xl border border-blue-500/30 bg-gradient-to-br from-blue-50/50 via-white to-indigo-50/30 dark:from-blue-950/20 dark:via-zinc-900 dark:to-indigo-950/20 p-5 sm:p-6 space-y-4 shadow-sm animate-in fade-in duration-200"
+          className="rounded-3xl border border-primary/30 bg-gradient-to-br from-primary/5 via-card to-card p-5 sm:p-6 space-y-4 shadow-xs animate-in fade-in duration-200"
         >
-          <h3 className="text-sm font-bold text-zinc-900 dark:text-zinc-50 flex items-center gap-2">
-            <Plus className="h-4 w-4 text-blue-600" />
+          <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
+            <Plus className="h-4 w-4 text-primary" />
             <span>بيانات المهمة الدراسية</span>
           </h3>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             <div className="sm:col-span-2 space-y-1">
-              <label className="text-xs font-medium text-zinc-700 dark:text-zinc-300">
+              <label className="text-xs font-medium text-foreground">
                 عنوان المهمة / المحاضرة
               </label>
               <Input
                 value={newTitle}
                 onChange={(e) => setNewTitle(e.target.value)}
                 placeholder="مثال: مذاكرة المحاضرة 4 + حل أسئلة الـ PDF"
-                className="rounded-xl bg-white dark:bg-zinc-950 text-xs"
+                className="rounded-xl bg-background text-xs"
                 required
               />
             </div>
 
             <div className="space-y-1">
-              <label className="text-xs font-medium text-zinc-700 dark:text-zinc-300">اليوم</label>
+              <label className="text-xs font-medium text-foreground">اليوم</label>
               <select
                 value={newDay}
                 onChange={(e) => setNewDay(e.target.value as StudyTask["day"])}
-                className="w-full h-10 px-3 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full h-10 px-3 rounded-xl border border-input bg-background text-xs font-medium focus:outline-none focus:ring-2 focus:ring-primary"
               >
                 {WEEK_DAYS.map((day) => (
                   <option key={day} value={day}>
@@ -173,35 +173,35 @@ export default function StudyPlannerPage() {
             </div>
 
             <div className="space-y-1">
-              <label className="text-xs font-medium text-zinc-700 dark:text-zinc-300">
+              <label className="text-xs font-medium text-foreground">
                 التوقيت (اختياري)
               </label>
               <Input
                 value={newTime}
                 onChange={(e) => setNewTime(e.target.value)}
                 placeholder="مثال: 07:00 مساءً"
-                className="rounded-xl bg-white dark:bg-zinc-950 text-xs"
+                className="rounded-xl bg-background text-xs"
               />
             </div>
 
             <div className="space-y-1">
-              <label className="text-xs font-medium text-zinc-700 dark:text-zinc-300">
+              <label className="text-xs font-medium text-foreground">
                 المادة (اختياري)
               </label>
               <Input
                 value={newSubject}
                 onChange={(e) => setNewSubject(e.target.value)}
                 placeholder="مثال: الفيزياء أو الجبر"
-                className="rounded-xl bg-white dark:bg-zinc-950 text-xs"
+                className="rounded-xl bg-background text-xs"
               />
             </div>
 
             <div className="space-y-1">
-              <label className="text-xs font-medium text-zinc-700 dark:text-zinc-300">الأهمية</label>
+              <label className="text-xs font-medium text-foreground">الأهمية</label>
               <select
                 value={newPriority}
                 onChange={(e) => setNewPriority(e.target.value as any)}
-                className="w-full h-10 px-3 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full h-10 px-3 rounded-xl border border-input bg-background text-xs font-medium focus:outline-none focus:ring-2 focus:ring-primary"
               >
                 <option value="high">عالية (هام وعاجل 🔴)</option>
                 <option value="medium">متوسطة (عادي 🟡)</option>
@@ -223,7 +223,7 @@ export default function StudyPlannerPage() {
             <Button
               type="submit"
               size="sm"
-              className="rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs"
+              className="rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 font-bold text-xs"
             >
               حفظ المهمة
             </Button>
@@ -235,10 +235,10 @@ export default function StudyPlannerPage() {
       <div className="flex items-center gap-1.5 overflow-x-auto pb-2">
         <button
           onClick={() => setSelectedDay("الكل")}
-          className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
+          className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
             selectedDay === "الكل"
-              ? "bg-blue-600 text-white shadow-xs"
-              : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200"
+              ? "bg-primary text-primary-foreground shadow-xs"
+              : "bg-muted text-muted-foreground hover:bg-muted/80"
           }`}
         >
           كل الأسبوع ({tasks.length})
@@ -249,10 +249,10 @@ export default function StudyPlannerPage() {
             <button
               key={day}
               onClick={() => setSelectedDay(day)}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
                 selectedDay === day
-                  ? "bg-blue-600 text-white shadow-xs"
-                  : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200"
+                  ? "bg-primary text-primary-foreground shadow-xs"
+                  : "bg-muted text-muted-foreground hover:bg-muted/80"
               }`}
             >
               {day} {dayCount > 0 && `(${dayCount})`}
@@ -263,12 +263,12 @@ export default function StudyPlannerPage() {
 
       {/* Tasks List */}
       {filteredTasks.length === 0 ? (
-        <div className="p-10 text-center rounded-3xl border border-dashed border-zinc-200 dark:border-zinc-800 bg-white/40 dark:bg-zinc-900/30 space-y-2">
-          <Calendar className="h-8 w-8 text-zinc-400 mx-auto" />
-          <h3 className="text-sm font-bold text-zinc-700 dark:text-zinc-300">
+        <div className="p-10 text-center rounded-3xl border border-dashed border-border bg-card/40 space-y-2">
+          <Calendar className="h-8 w-8 text-muted-foreground mx-auto" />
+          <h3 className="text-sm font-bold text-foreground">
             لا توجد مهام دراسية مضافة {selectedDay !== "الكل" && `ليوم ${selectedDay}`}
           </h3>
-          <p className="text-xs text-zinc-400">
+          <p className="text-xs text-muted-foreground">
             اضغط على "إضافة مهمة دراسية جديدة" لتنظيم جدولك
           </p>
         </div>
@@ -280,33 +280,33 @@ export default function StudyPlannerPage() {
                 key={task.id}
                 className={`p-4 rounded-2xl border transition-all flex items-center justify-between gap-3 ${
                   task.isCompleted
-                    ? "bg-zinc-50/60 dark:bg-zinc-900/40 border-zinc-200/60 dark:border-zinc-800/60 opacity-70"
-                    : "bg-white dark:bg-zinc-900 border-zinc-200/80 dark:border-zinc-800 shadow-xs hover:border-blue-500/40"
+                    ? "bg-muted/40 border-border/60 opacity-70"
+                    : "bg-card border-border shadow-xs hover:border-primary/40"
                 }`}
               >
                 <div className="flex items-center gap-3.5 min-w-0">
                   <button
                     type="button"
                     onClick={() => handleToggle(task.id)}
-                    className="shrink-0 text-zinc-400 hover:text-emerald-600 transition-colors"
+                    className="shrink-0 text-muted-foreground hover:text-emerald-600 transition-colors cursor-pointer"
                   >
                     {task.isCompleted ? (
-                      <CheckCircle2 className="h-5 w-5 text-emerald-600 dark:text-emerald-400 fill-emerald-100 dark:fill-emerald-950/40" />
+                      <CheckCircle2 className="h-5 w-5 text-emerald-600 dark:text-emerald-400 fill-emerald-500/20" />
                     ) : (
-                      <Circle className="h-5 w-5 hover:text-blue-600" />
+                      <Circle className="h-5 w-5 hover:text-primary" />
                     )}
                   </button>
 
                   <div className="space-y-1 min-w-0">
                     <p
-                      className={`text-sm font-bold text-zinc-900 dark:text-zinc-100 ${
-                        task.isCompleted ? "line-through text-zinc-400 dark:text-zinc-500" : ""
+                      className={`text-sm font-bold text-foreground ${
+                        task.isCompleted ? "line-through text-muted-foreground" : ""
                       }`}
                     >
                       {task.title}
                     </p>
-                    <div className="flex flex-wrap items-center gap-2 text-[11px] text-zinc-400">
-                      <span className="font-semibold text-blue-600 dark:text-blue-400">
+                    <div className="flex flex-wrap items-center gap-2 text-[11px] text-muted-foreground">
+                      <span className="font-semibold text-primary">
                         {task.day}
                       </span>
                       {task.time && (
@@ -316,7 +316,7 @@ export default function StudyPlannerPage() {
                         </span>
                       )}
                       {task.subjectName && (
-                        <span className="px-2 py-0.5 rounded-md bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300">
+                        <span className="px-2 py-0.5 rounded-md bg-muted text-muted-foreground">
                           {task.subjectName}
                         </span>
                       )}
@@ -340,7 +340,7 @@ export default function StudyPlannerPage() {
                     variant="ghost"
                     size="sm"
                     onClick={() => handleDelete(task.id)}
-                    className="h-8 w-8 p-0 rounded-lg text-zinc-400 hover:text-rose-600"
+                    className="h-8 w-8 p-0 rounded-lg text-muted-foreground hover:text-rose-600"
                   >
                     <Trash2 className="h-3.5 w-3.5" />
                   </Button>
@@ -353,3 +353,4 @@ export default function StudyPlannerPage() {
     </div>
   );
 }
+

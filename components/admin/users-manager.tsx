@@ -185,10 +185,10 @@ export function UsersManager({ initialUsers, allSubjects }: UsersManagerProps) {
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">
             إدارة المستخدمين والطلاب
           </h1>
-          <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">
+          <p className="text-sm text-muted-foreground mt-1">
             إنشاء حسابات الطلاب، تخصيص المواد لكل طالب، وتعيين الصلاحيات
           </p>
         </div>
@@ -202,7 +202,7 @@ export function UsersManager({ initialUsers, allSubjects }: UsersManagerProps) {
       {/* Filter & Search Bar */}
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">
-          <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400 pointer-events-none" />
+          <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
           <Input
             placeholder="بحث بالاسم أو اسم المستخدم..."
             value={searchQuery}
@@ -251,10 +251,10 @@ export function UsersManager({ initialUsers, allSubjects }: UsersManagerProps) {
           }
         />
       ) : (
-        <Card className="rounded-2xl border-zinc-200/80 dark:border-zinc-800/80 overflow-hidden">
+        <Card className="rounded-2xl border-border/80 overflow-hidden bg-card/60 backdrop-blur-md">
           <div className="overflow-x-auto">
             <table className="w-full text-right text-xs">
-              <thead className="bg-zinc-50 dark:bg-zinc-900/50 border-b border-zinc-200/70 dark:border-zinc-800/70 text-zinc-500 font-medium">
+              <thead className="bg-secondary/40 border-b border-border/70 text-muted-foreground font-medium">
                 <tr>
                   <th className="p-4">المستخدم</th>
                   <th className="p-4">اسم المستخدم</th>
@@ -265,31 +265,31 @@ export function UsersManager({ initialUsers, allSubjects }: UsersManagerProps) {
                   <th className="p-4 text-left">الإجراءات</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800">
+              <tbody className="divide-y divide-border/60">
                 {filteredUsers.map((user) => (
                   <tr
                     key={user.id}
-                    className="hover:bg-zinc-50/50 dark:hover:bg-zinc-800/20 transition-colors"
+                    className="hover:bg-secondary/30 transition-colors"
                   >
                     <td className="p-4">
                       <div className="flex items-center gap-3">
-                        <Avatar className="h-9 w-9">
-                          <AvatarFallback className="bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 text-xs font-bold">
+                        <Avatar className="h-9 w-9 border border-border">
+                          <AvatarFallback className="bg-primary/10 text-primary text-xs font-bold">
                             {user.full_name.charAt(0)}
                           </AvatarFallback>
                         </Avatar>
                         <div>
-                          <p className="font-semibold text-zinc-900 dark:text-zinc-100">
+                          <p className="font-semibold text-foreground">
                             {user.full_name}
                           </p>
-                          <p className="text-[11px] text-zinc-400">
+                          <p className="text-[11px] text-muted-foreground">
                             انضم {formatDate(user.created_at)}
                           </p>
                         </div>
                       </div>
                     </td>
 
-                    <td className="p-4 font-mono text-zinc-600 dark:text-zinc-400 dir-ltr text-right">
+                    <td className="p-4 font-mono text-muted-foreground dir-ltr text-right">
                       @{user.username}
                     </td>
 
@@ -317,7 +317,7 @@ export function UsersManager({ initialUsers, allSubjects }: UsersManagerProps) {
 
                     <td className="p-4 max-w-xs">
                       {user.role === "admin" ? (
-                        <span className="text-zinc-400 italic">كل المواد (مشرف)</span>
+                        <span className="text-muted-foreground italic">كل المواد (مشرف)</span>
                       ) : user.assigned_subjects?.length > 0 ? (
                         <div className="flex flex-wrap gap-1">
                           {user.assigned_subjects.slice(0, 3).map((sub) => (
@@ -338,15 +338,15 @@ export function UsersManager({ initialUsers, allSubjects }: UsersManagerProps) {
                       )}
                     </td>
 
-                    <td className="p-4 text-zinc-500">
+                    <td className="p-4 text-muted-foreground">
                       {user.last_login_at ? formatRelativeTime(user.last_login_at) : "لم يسجل بعد"}
                     </td>
 
                     <td className="p-4 text-left">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg">
-                            <MoreVertical className="h-4 w-4 text-zinc-400" />
+                          <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg text-muted-foreground hover:text-foreground">
+                            <MoreVertical className="h-4 w-4" />
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-44">
@@ -408,7 +408,7 @@ export function UsersManager({ initialUsers, allSubjects }: UsersManagerProps) {
 
           <form onSubmit={handleCreateSubmit} className="space-y-4 pt-2">
             <div className="space-y-1.5">
-              <label className="text-xs font-medium">الاسم الكامل</label>
+              <label className="text-xs font-medium text-foreground">الاسم الكامل</label>
               <Input
                 name="full_name"
                 placeholder="مثال: خالد علي محمد"
@@ -419,7 +419,7 @@ export function UsersManager({ initialUsers, allSubjects }: UsersManagerProps) {
 
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <label className="text-xs font-medium">اسم المستخدم</label>
+                <label className="text-xs font-medium text-foreground">اسم المستخدم</label>
                 <Input
                   name="username"
                   placeholder="khaled_ali"
@@ -430,7 +430,7 @@ export function UsersManager({ initialUsers, allSubjects }: UsersManagerProps) {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-medium">كلمة المرور</label>
+                <label className="text-xs font-medium text-foreground">كلمة المرور</label>
                 <Input
                   name="password"
                   type="password"
@@ -444,10 +444,10 @@ export function UsersManager({ initialUsers, allSubjects }: UsersManagerProps) {
 
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <label className="text-xs font-medium">نوع الحساب</label>
+                <label className="text-xs font-medium text-foreground">نوع الحساب</label>
                 <select
                   name="role"
-                  className="flex h-10 w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-xs dark:border-zinc-800 dark:bg-zinc-900"
+                  className="flex h-10 w-full rounded-xl border border-input bg-card px-3 py-2 text-xs text-foreground focus:outline-hidden focus:ring-2 focus:ring-ring"
                   defaultValue="student"
                 >
                   <option value="student">طالب (Student)</option>
@@ -456,10 +456,10 @@ export function UsersManager({ initialUsers, allSubjects }: UsersManagerProps) {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-medium">الحالة</label>
+                <label className="text-xs font-medium text-foreground">الحالة</label>
                 <select
                   name="is_active"
-                  className="flex h-10 w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-xs dark:border-zinc-800 dark:bg-zinc-900"
+                  className="flex h-10 w-full rounded-xl border border-input bg-card px-3 py-2 text-xs text-foreground focus:outline-hidden focus:ring-2 focus:ring-ring"
                   defaultValue="true"
                 >
                   <option value="true">نشط ومفعل</option>
@@ -469,18 +469,18 @@ export function UsersManager({ initialUsers, allSubjects }: UsersManagerProps) {
             </div>
 
             {/* Subject Assignments */}
-            <div className="space-y-2 pt-2 border-t border-zinc-100 dark:border-zinc-800">
-              <label className="text-xs font-medium flex items-center justify-between">
+            <div className="space-y-2 pt-2 border-t border-border/60">
+              <label className="text-xs font-medium flex items-center justify-between text-foreground">
                 <span>المواد المصرح بها للطالب</span>
-                <span className="text-[11px] text-zinc-400">
+                <span className="text-[11px] text-muted-foreground">
                   {selectedSubjectIds.length} مواد محددة
                 </span>
               </label>
 
               {allSubjects.length === 0 ? (
-                <p className="text-xs text-zinc-400">لا توجد مواد مضافة في النظام حالياً</p>
+                <p className="text-xs text-muted-foreground">لا توجد مواد مضافة في النظام حالياً</p>
               ) : (
-                <div className="max-h-40 overflow-y-auto space-y-1.5 p-2 rounded-xl bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800">
+                <div className="max-h-40 overflow-y-auto space-y-1.5 p-2 rounded-xl bg-secondary/30 border border-border/70">
                   {allSubjects.map((subject) => {
                     const isSelected = selectedSubjectIds.includes(subject.id);
                     return (
@@ -489,16 +489,16 @@ export function UsersManager({ initialUsers, allSubjects }: UsersManagerProps) {
                         onClick={() => toggleSubjectSelect(subject.id)}
                         className={`flex items-center justify-between p-2 rounded-lg cursor-pointer text-xs transition-colors ${
                           isSelected
-                            ? "bg-blue-50 text-blue-900 dark:bg-blue-950/50 dark:text-blue-200 font-medium"
-                            : "hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-700 dark:text-zinc-300"
+                            ? "bg-primary/10 text-primary font-medium"
+                            : "hover:bg-secondary/60 text-foreground"
                         }`}
                       >
                         <div className="flex items-center gap-2">
-                          <BookOpen className="h-3.5 w-3.5 text-zinc-400" />
+                          <BookOpen className="h-3.5 w-3.5 text-muted-foreground" />
                           <span>{subject.name}</span>
-                          <span className="text-[10px] text-zinc-400">({subject.code})</span>
+                          <span className="text-[10px] text-muted-foreground">({subject.code})</span>
                         </div>
-                        {isSelected && <Check className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400" />}
+                        {isSelected && <Check className="h-3.5 w-3.5 text-primary" />}
                       </div>
                     );
                   })}
@@ -526,7 +526,7 @@ export function UsersManager({ initialUsers, allSubjects }: UsersManagerProps) {
             <DialogTitle>تعديل بيانات المستخدم</DialogTitle>
             <DialogDescription>
               تعديل الاسم، الدور، كلمة المرور، والمواد المصرح بها للمستخدم:{" "}
-              <strong className="text-zinc-900 dark:text-zinc-100">
+              <strong className="text-foreground">
                 {selectedUser?.full_name}
               </strong>
             </DialogDescription>
@@ -535,7 +535,7 @@ export function UsersManager({ initialUsers, allSubjects }: UsersManagerProps) {
           {selectedUser && (
             <form onSubmit={handleEditSubmit} className="space-y-4 pt-2">
               <div className="space-y-1.5">
-                <label className="text-xs font-medium">الاسم الكامل</label>
+                <label className="text-xs font-medium text-foreground">الاسم الكامل</label>
                 <Input
                   name="full_name"
                   defaultValue={selectedUser.full_name}
@@ -546,10 +546,10 @@ export function UsersManager({ initialUsers, allSubjects }: UsersManagerProps) {
 
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1.5">
-                  <label className="text-xs font-medium">نوع الحساب</label>
+                  <label className="text-xs font-medium text-foreground">نوع الحساب</label>
                   <select
                     name="role"
-                    className="flex h-10 w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-xs dark:border-zinc-800 dark:bg-zinc-900"
+                    className="flex h-10 w-full rounded-xl border border-input bg-card px-3 py-2 text-xs text-foreground focus:outline-hidden focus:ring-2 focus:ring-ring"
                     defaultValue={selectedUser.role}
                   >
                     <option value="student">طالب (Student)</option>
@@ -558,10 +558,10 @@ export function UsersManager({ initialUsers, allSubjects }: UsersManagerProps) {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-medium">الحالة</label>
+                  <label className="text-xs font-medium text-foreground">الحالة</label>
                   <select
                     name="is_active"
-                    className="flex h-10 w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-xs dark:border-zinc-800 dark:bg-zinc-900"
+                    className="flex h-10 w-full rounded-xl border border-input bg-card px-3 py-2 text-xs text-foreground focus:outline-hidden focus:ring-2 focus:ring-ring"
                     defaultValue={selectedUser.is_active ? "true" : "false"}
                   >
                     <option value="true">نشط ومفعل</option>
@@ -571,9 +571,9 @@ export function UsersManager({ initialUsers, allSubjects }: UsersManagerProps) {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-medium flex items-center justify-between">
+                <label className="text-xs font-medium flex items-center justify-between text-foreground">
                   <span>تعيين كلمة مرور جديدة</span>
-                  <span className="text-[11px] text-zinc-400">اترك الحقل فارغاً إذا لم ترغب في التغيير</span>
+                  <span className="text-[11px] text-muted-foreground">اترك الحقل فارغاً إذا لم ترغب في التغيير</span>
                 </label>
                 <Input
                   name="password"
@@ -585,15 +585,15 @@ export function UsersManager({ initialUsers, allSubjects }: UsersManagerProps) {
               </div>
 
               {/* Subject Permissions Assignment */}
-              <div className="space-y-2 pt-2 border-t border-zinc-100 dark:border-zinc-800">
-                <label className="text-xs font-medium flex items-center justify-between">
+              <div className="space-y-2 pt-2 border-t border-border/60">
+                <label className="text-xs font-medium flex items-center justify-between text-foreground">
                   <span>المواد المصرح بها للطالب</span>
-                  <span className="text-[11px] text-zinc-400">
+                  <span className="text-[11px] text-muted-foreground">
                     {selectedSubjectIds.length} مواد محددة
                   </span>
                 </label>
 
-                <div className="max-h-40 overflow-y-auto space-y-1.5 p-2 rounded-xl bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800">
+                <div className="max-h-40 overflow-y-auto space-y-1.5 p-2 rounded-xl bg-secondary/30 border border-border/70">
                   {allSubjects.map((subject) => {
                     const isSelected = selectedSubjectIds.includes(subject.id);
                     return (
@@ -602,16 +602,16 @@ export function UsersManager({ initialUsers, allSubjects }: UsersManagerProps) {
                         onClick={() => toggleSubjectSelect(subject.id)}
                         className={`flex items-center justify-between p-2 rounded-lg cursor-pointer text-xs transition-colors ${
                           isSelected
-                            ? "bg-blue-50 text-blue-900 dark:bg-blue-950/50 dark:text-blue-200 font-medium"
-                            : "hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-700 dark:text-zinc-300"
+                            ? "bg-primary/10 text-primary font-medium"
+                            : "hover:bg-secondary/60 text-foreground"
                         }`}
                       >
                         <div className="flex items-center gap-2">
-                          <BookOpen className="h-3.5 w-3.5 text-zinc-400" />
+                          <BookOpen className="h-3.5 w-3.5 text-muted-foreground" />
                           <span>{subject.name}</span>
-                          <span className="text-[10px] text-zinc-400">({subject.code})</span>
+                          <span className="text-[10px] text-muted-foreground">({subject.code})</span>
                         </div>
-                        {isSelected && <Check className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400" />}
+                        {isSelected && <Check className="h-3.5 w-3.5 text-primary" />}
                       </div>
                     );
                   })}
@@ -636,10 +636,10 @@ export function UsersManager({ initialUsers, allSubjects }: UsersManagerProps) {
       <Dialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
         <DialogContent className="max-w-sm">
           <DialogHeader>
-            <DialogTitle className="text-rose-600">تأكيد حذف المستخدم</DialogTitle>
+            <DialogTitle className="text-destructive">تأكيد حذف المستخدم</DialogTitle>
             <DialogDescription>
               هل أنت متأكد من رغبتك في حذف حساب{" "}
-              <strong>{selectedUser?.full_name}</strong> نهائياً؟ سيتم حذف جميع تقدمه وعلاماته المرجعية.
+              <strong className="text-foreground">{selectedUser?.full_name}</strong> نهائياً؟ سيتم حذف جميع تقدمه وعلاماته المرجعية.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="pt-4">

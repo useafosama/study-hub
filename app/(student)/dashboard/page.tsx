@@ -89,42 +89,42 @@ export default async function StudentDashboardPage() {
       {/* 2. Key Metrics Bar (Apple Frosted Glass) */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="glass-card-interactive p-4.5 rounded-3xl flex items-center gap-3.5 group cursor-default">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 font-bold border border-blue-200/60 shadow-xs group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-500/10 text-primary font-bold border border-primary/20 shadow-xs group-hover:scale-110 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
             <BookOpen className="h-5 w-5" />
           </div>
           <div>
-            <div className="text-xs font-semibold text-zinc-500">المواد المخصصة</div>
-            <div className="text-lg font-black text-zinc-900">{subjects.length} مواد</div>
+            <div className="text-xs font-semibold text-muted-foreground">المواد المخصصة</div>
+            <div className="text-lg font-black text-foreground">{subjects.length} مواد</div>
           </div>
         </div>
 
         <div className="glass-card-interactive p-4.5 rounded-3xl flex items-center gap-3.5 group cursor-default">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 font-bold border border-emerald-200/60 shadow-xs group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all duration-300">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold border border-emerald-500/20 shadow-xs group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all duration-300">
             <CheckCircle2 className="h-5 w-5" />
           </div>
           <div>
-            <div className="text-xs font-semibold text-zinc-500">الدروس المكتملة</div>
-            <div className="text-lg font-black text-zinc-900">{totalCompletedCount} محاضرة</div>
+            <div className="text-xs font-semibold text-muted-foreground">الدروس المكتملة</div>
+            <div className="text-lg font-black text-foreground">{totalCompletedCount} محاضرة</div>
           </div>
         </div>
 
         <div className="glass-card-interactive p-4.5 rounded-3xl flex items-center gap-3.5 group cursor-default">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-purple-50 text-purple-600 font-bold border border-purple-200/60 shadow-xs group-hover:scale-110 group-hover:bg-purple-600 group-hover:text-white transition-all duration-300">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-purple-500/10 text-purple-600 dark:text-purple-400 font-bold border border-purple-500/20 shadow-xs group-hover:scale-110 group-hover:bg-purple-600 group-hover:text-white transition-all duration-300">
             <Layers className="h-5 w-5" />
           </div>
           <div>
-            <div className="text-xs font-semibold text-zinc-500">إجمالي المحتوى</div>
-            <div className="text-lg font-black text-zinc-900">{totalContentsCount} درس</div>
+            <div className="text-xs font-semibold text-muted-foreground">إجمالي المحتوى</div>
+            <div className="text-lg font-black text-foreground">{totalContentsCount} درس</div>
           </div>
         </div>
 
         <div className="glass-card-interactive p-4.5 rounded-3xl flex items-center gap-3.5 group cursor-default">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-50 text-amber-600 font-bold border border-amber-200/60 shadow-xs group-hover:scale-110 group-hover:bg-amber-600 group-hover:text-white transition-all duration-300">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 font-bold border border-amber-500/20 shadow-xs group-hover:scale-110 group-hover:bg-amber-600 group-hover:text-white transition-all duration-300">
             <Bell className="h-5 w-5" />
           </div>
           <div>
-            <div className="text-xs font-semibold text-zinc-500">التنبيهات</div>
-            <div className="text-lg font-black text-zinc-900">{announcements.length} إعلان</div>
+            <div className="text-xs font-semibold text-muted-foreground">التنبيهات</div>
+            <div className="text-lg font-black text-foreground">{announcements.length} إعلان</div>
           </div>
         </div>
       </div>
@@ -157,11 +157,11 @@ export default async function StudentDashboardPage() {
       {announcements.length > 0 && (
         <div className="space-y-3.5">
           <div className="flex items-center justify-between">
-            <h2 className="text-sm font-bold text-zinc-900 flex items-center gap-2">
+            <h2 className="text-sm font-bold text-foreground flex items-center gap-2">
               <Bell className="h-4 w-4 text-amber-500" />
               <span>تنبيهات وملاحظات الأستاذ يوسف أسامة</span>
             </h2>
-            <Link href="/announcements" className="text-xs font-bold text-blue-600 hover:underline">
+            <Link href="/announcements" className="text-xs font-bold text-primary hover:underline">
               عرض الكل
             </Link>
           </div>
@@ -170,21 +170,21 @@ export default async function StudentDashboardPage() {
             {announcements.slice(0, 2).map((a) => (
               <div
                 key={a.id}
-                className="glass-card-interactive p-4.5 rounded-3xl border-amber-300/60 bg-amber-50/40 flex items-start gap-3.5"
+                className="glass-card-interactive p-4.5 rounded-3xl border-amber-500/30 bg-amber-500/5 flex items-start gap-3.5"
               >
-                <div className="p-2.5 rounded-2xl bg-amber-500/15 text-amber-700 shrink-0 mt-0.5">
+                <div className="p-2.5 rounded-2xl bg-amber-500/15 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5">
                   <Bell className="h-4 w-4" />
                 </div>
                 <div className="space-y-1 min-w-0 flex-1">
                   <div className="flex items-center justify-between gap-2">
-                    <span className="text-xs font-bold text-zinc-900 truncate">
+                    <span className="text-xs font-bold text-foreground truncate">
                       {a.title}
                     </span>
-                    <span className="text-[10px] text-zinc-400 shrink-0 font-medium">
+                    <span className="text-[10px] text-muted-foreground shrink-0 font-medium">
                       {formatRelativeTime(a.created_at)}
                     </span>
                   </div>
-                  <p className="text-xs text-zinc-600 line-clamp-2 leading-relaxed">
+                  <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
                     {a.content}
                   </p>
                 </div>
@@ -198,14 +198,14 @@ export default async function StudentDashboardPage() {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center border border-blue-200/60">
+            <div className="h-8 w-8 rounded-xl bg-primary/10 text-primary flex items-center justify-center border border-primary/20">
               <BookOpen className="h-4 w-4" />
             </div>
-            <h2 className="text-lg font-bold text-zinc-900">
+            <h2 className="text-lg font-bold text-foreground">
               المواد والمقررات الدراسية
             </h2>
           </div>
-          <span className="text-xs text-zinc-500 font-semibold">
+          <span className="text-xs text-muted-foreground font-semibold">
             {subjects.length} مقررات متاحة
           </span>
         </div>
@@ -228,34 +228,34 @@ export default async function StudentDashboardPage() {
                   <div className="glass-card-interactive p-6 h-full flex flex-col justify-between">
                     <div className="space-y-3.5">
                       <div className="flex items-center justify-between">
-                        <span className="font-mono text-xs font-bold uppercase px-3 py-1 rounded-xl bg-zinc-100 text-zinc-700 border border-zinc-200/60">
+                        <span className="font-mono text-xs font-bold uppercase px-3 py-1 rounded-xl bg-muted text-muted-foreground border border-border/60">
                           {subject.code}
                         </span>
-                        <div className="flex items-center gap-1.5 text-xs font-bold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-lg border border-blue-200/60">
+                        <div className="flex items-center gap-1.5 text-xs font-bold text-primary bg-primary/10 px-2.5 py-1 rounded-lg border border-primary/20">
                           <span>{percentage}%</span>
                         </div>
                       </div>
 
                       <div>
-                        <h3 className="font-bold text-base text-zinc-900 group-hover:text-blue-600 transition-colors">
+                        <h3 className="font-bold text-base text-foreground group-hover:text-primary transition-colors">
                           {subject.name}
                         </h3>
-                        <p className="text-xs text-zinc-500 line-clamp-2 mt-1.5 leading-relaxed">
+                        <p className="text-xs text-muted-foreground line-clamp-2 mt-1.5 leading-relaxed">
                           {subject.description || "استعرض محاضرات وسكاشن المادة وتدريباتها"}
                         </p>
                       </div>
                     </div>
 
-                    <div className="space-y-2.5 pt-4 mt-5 border-t border-zinc-100">
-                      <div className="flex items-center justify-between text-xs text-zinc-500 font-medium">
+                    <div className="space-y-2.5 pt-4 mt-5 border-t border-border/60">
+                      <div className="flex items-center justify-between text-xs text-muted-foreground font-medium">
                         <span>نسبة الإنجاز</span>
-                        <span className="font-bold text-zinc-800">
+                        <span className="font-bold text-foreground">
                           {completed} من {total} مكتمل
                         </span>
                       </div>
-                      <div className="w-full bg-zinc-100 h-2 rounded-full overflow-hidden">
+                      <div className="w-full bg-muted h-2 rounded-full overflow-hidden">
                         <div
-                          className="bg-gradient-to-r from-blue-600 to-indigo-600 h-full rounded-full transition-all duration-500"
+                          className="bg-primary h-full rounded-full transition-all duration-500"
                           style={{ width: `${percentage}%` }}
                         />
                       </div>
@@ -272,8 +272,8 @@ export default async function StudentDashboardPage() {
       {recentContents.length > 0 && (
         <div className="space-y-4 pt-2">
           <div className="flex items-center justify-between">
-            <h2 className="text-base font-bold text-zinc-900 flex items-center gap-2">
-              <Sparkles className="h-4 w-4 text-blue-500" />
+            <h2 className="text-base font-bold text-foreground flex items-center gap-2">
+              <Sparkles className="h-4 w-4 text-primary" />
               <span>أحدث المحتويات المضافة للمقررات</span>
             </h2>
           </div>
@@ -290,30 +290,30 @@ export default async function StudentDashboardPage() {
                   className="group block p-4.5 rounded-3xl glass-card-interactive"
                 >
                   <div className="flex items-start justify-between gap-2 mb-2">
-                    <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-lg bg-blue-50 text-blue-600 border border-blue-200/60">
+                    <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-lg bg-primary/10 text-primary border border-primary/20">
                       {content.type === "lecture" ? "محاضرة مسجلة" : "سكشن تطبيقي"}
                     </span>
-                    <span className="text-[10px] text-zinc-400 font-medium">
+                    <span className="text-[10px] text-muted-foreground font-medium">
                       {formatRelativeTime(content.created_at)}
                     </span>
                   </div>
 
-                  <h4 className="font-bold text-sm text-zinc-900 line-clamp-1 group-hover:text-blue-600 transition-colors">
+                  <h4 className="font-bold text-sm text-foreground line-clamp-1 group-hover:text-primary transition-colors">
                     {content.title}
                   </h4>
-                  <p className="text-xs text-zinc-400 mt-1">
+                  <p className="text-xs text-muted-foreground mt-1">
                     {content.subjects?.name}
                   </p>
 
-                  <div className="flex items-center gap-3 mt-3 pt-3 border-t border-zinc-100 text-[11px]">
+                  <div className="flex items-center gap-3 mt-3 pt-3 border-t border-border/60 text-[11px]">
                     {hasVideo && (
-                      <span className="flex items-center gap-1 text-red-600 font-semibold">
+                      <span className="flex items-center gap-1 text-red-600 dark:text-red-400 font-semibold">
                         <Video className="h-3.5 w-3.5" />
                         فيديو
                       </span>
                     )}
                     {hasPdf && (
-                      <span className="flex items-center gap-1 text-amber-600 font-semibold">
+                      <span className="flex items-center gap-1 text-amber-600 dark:text-amber-400 font-semibold">
                         <FileText className="h-3.5 w-3.5" />
                         مذكرة PDF
                       </span>
@@ -329,3 +329,4 @@ export default async function StudentDashboardPage() {
     </div>
   );
 }
+

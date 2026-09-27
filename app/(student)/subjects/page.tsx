@@ -14,10 +14,10 @@ export default async function StudentSubjectsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+        <h1 className="text-2xl font-bold tracking-tight text-foreground">
           المواد الدراسية
         </h1>
-        <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">
+        <p className="text-sm text-muted-foreground mt-1">
           جميع المقررات والمناهج المصرح لك بالوصول إليها
         </p>
       </div>
@@ -43,25 +43,25 @@ export default async function StudentSubjectsPage() {
                       <Badge variant="outline" className="font-mono text-xs uppercase">
                         {subject.code}
                       </Badge>
-                      <span className="text-xs font-semibold text-blue-600 dark:text-blue-400">
+                      <span className="text-xs font-semibold text-primary">
                         {percentage}%
                       </span>
                     </div>
 
                     <div>
-                      <h3 className="font-bold text-base text-zinc-900 dark:text-zinc-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                      <h3 className="font-bold text-base text-foreground group-hover:text-primary transition-colors">
                         {subject.name}
                       </h3>
-                      <p className="text-xs text-zinc-500 dark:text-zinc-400 line-clamp-2 mt-1">
+                      <p className="text-xs text-muted-foreground line-clamp-2 mt-1">
                         {subject.description || "تصفح المحاضرات والسكاشن والمرفقات"}
                       </p>
                     </div>
                   </div>
 
-                  <div className="space-y-2 pt-4 mt-4 border-t border-zinc-100 dark:border-zinc-800/80">
-                    <div className="flex items-center justify-between text-xs text-zinc-500 dark:text-zinc-400">
+                  <div className="space-y-2 pt-4 mt-4 border-t border-border/60">
+                    <div className="flex items-center justify-between text-xs text-muted-foreground">
                       <span>الإنجاز الكلي</span>
-                      <span className="font-medium text-zinc-700 dark:text-zinc-300">
+                      <span className="font-medium text-foreground">
                         {completed} / {total} مكتمل
                       </span>
                     </div>
@@ -76,3 +76,4 @@ export default async function StudentSubjectsPage() {
     </div>
   );
 }
+

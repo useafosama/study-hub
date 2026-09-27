@@ -107,10 +107,10 @@ export default async function AdminDashboardPage() {
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">
             لوحة الإدارة والمتابعة
           </h1>
-          <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">
+          <p className="text-sm text-muted-foreground mt-1">
             نظرة عامة على المواد، الطلاب، المحتوى، والنشاطات الحديثة
           </p>
         </div>
@@ -142,13 +142,13 @@ export default async function AdminDashboardPage() {
                   <div className={`p-2.5 rounded-xl ${stat.bg} ${stat.color}`}>
                     <Icon className="h-5 w-5" />
                   </div>
-                  <ArrowUpRight className="h-4 w-4 text-zinc-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <ArrowUpRight className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
                 </div>
                 <div>
-                  <div className="text-2xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight">
+                  <div className="text-2xl font-bold text-foreground tracking-tight">
                     {stat.value}
                   </div>
-                  <div className="text-xs font-medium text-zinc-500 dark:text-zinc-400 mt-0.5">
+                  <div className="text-xs font-medium text-muted-foreground mt-0.5">
                     {stat.title}
                   </div>
                 </div>
@@ -163,45 +163,45 @@ export default async function AdminDashboardPage() {
         {/* Recent Content Column */}
         <div className="lg:col-span-7 space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
-              <BookOpen className="h-4 w-4 text-blue-600" />
+            <h2 className="text-base font-semibold text-foreground flex items-center gap-2">
+              <BookOpen className="h-4 w-4 text-primary" />
               أحدث المحتويات المضافة
             </h2>
             <Link
               href="/admin/subjects"
-              className="text-xs font-medium text-blue-600 dark:text-blue-400 hover:underline"
+              className="text-xs font-medium text-primary hover:underline"
             >
               عرض الكل
             </Link>
           </div>
 
-          <Card className="rounded-2xl border-zinc-200/80 dark:border-zinc-800/80 overflow-hidden divide-y divide-zinc-100 dark:divide-zinc-800">
+          <Card className="rounded-2xl border-border/80 overflow-hidden divide-y divide-border/60 bg-card/60 backdrop-blur-md">
             {recentContents && recentContents.length > 0 ? (
               recentContents.map((content: any) => (
                 <div
                   key={content.id}
-                  className="flex items-center justify-between p-4 hover:bg-zinc-50/60 dark:hover:bg-zinc-800/30 transition-colors"
+                  className="flex items-center justify-between p-4 hover:bg-secondary/40 transition-colors"
                 >
                   <div className="space-y-1 min-w-0 pr-2">
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium text-zinc-900 dark:text-zinc-100 truncate">
+                      <span className="text-sm font-medium text-foreground truncate">
                         {content.title}
                       </span>
                       <Badge variant={content.is_published ? "success" : "secondary"}>
                         {content.is_published ? "منشور" : "مسودة"}
                       </Badge>
                     </div>
-                    <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                    <p className="text-xs text-muted-foreground">
                       {(content.subjects as any)?.name} • {content.type === "lecture" ? "محاضرة" : "سكشن"}
                     </p>
                   </div>
-                  <span className="text-xs text-zinc-400 shrink-0">
+                  <span className="text-xs text-muted-foreground shrink-0">
                     {formatRelativeTime(content.created_at)}
                   </span>
                 </div>
               ))
             ) : (
-              <div className="p-8 text-center text-xs text-zinc-400">
+              <div className="p-8 text-center text-xs text-muted-foreground">
                 لا يوجد محتوى مضاف حتى الآن
               </div>
             )}
@@ -211,31 +211,31 @@ export default async function AdminDashboardPage() {
         {/* Activity Feed Column */}
         <div className="lg:col-span-5 space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-base font-semibold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
+            <h2 className="text-base font-semibold text-foreground flex items-center gap-2">
               <Activity className="h-4 w-4 text-amber-500" />
               النشاطات الأخيرة
             </h2>
             <Link
               href="/admin/activity"
-              className="text-xs font-medium text-blue-600 dark:text-blue-400 hover:underline"
+              className="text-xs font-medium text-primary hover:underline"
             >
               عرض السجل الكامل
             </Link>
           </div>
 
-          <Card className="rounded-2xl border-zinc-200/80 dark:border-zinc-800/80 overflow-hidden divide-y divide-zinc-100 dark:divide-zinc-800">
+          <Card className="rounded-2xl border-border/80 overflow-hidden divide-y divide-border/60 bg-card/60 backdrop-blur-md">
             {activityLogs && activityLogs.length > 0 ? (
               activityLogs.map((log) => (
                 <div key={log.id} className="p-3.5 space-y-1 text-xs">
                   <div className="flex items-center justify-between">
-                    <span className="font-semibold text-zinc-800 dark:text-zinc-200">
+                    <span className="font-semibold text-foreground">
                       {log.user_full_name}
                     </span>
-                    <span className="text-[11px] text-zinc-400">
+                    <span className="text-[11px] text-muted-foreground">
                       {formatRelativeTime(log.created_at)}
                     </span>
                   </div>
-                  <p className="text-zinc-600 dark:text-zinc-400">
+                  <p className="text-muted-foreground">
                     {log.action === "create_user" && "قام بإنشاء مستخدم جديد"}
                     {log.action === "update_user" && "قام بتعديل بيانات مستخدم"}
                     {log.action === "delete_user" && "قام بحذف حساب مستخدم"}
@@ -250,7 +250,7 @@ export default async function AdminDashboardPage() {
                 </div>
               ))
             ) : (
-              <div className="p-8 text-center text-xs text-zinc-400">
+              <div className="p-8 text-center text-xs text-muted-foreground">
                 لا توجد نشاطات مسجلة بعد
               </div>
             )}
