@@ -40,21 +40,27 @@ export default async function AdminLayout({
   ];
 
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 flex flex-col md:flex-row">
+    <div className="min-h-screen flex flex-col md:flex-row relative">
+      {/* Background Soft Pastel Glows */}
+      <div className="fixed inset-0 pointer-events-none -z-10 overflow-hidden">
+        <div className="absolute top-0 right-1/4 w-[600px] h-[500px] bg-blue-500/[0.04] rounded-full blur-[140px]" />
+        <div className="absolute bottom-1/4 left-1/3 w-[500px] h-[450px] bg-indigo-500/[0.03] rounded-full blur-[140px]" />
+      </div>
+
       {/* Desktop Sidebar */}
-      <aside className="hidden md:flex flex-col w-64 border-l border-zinc-200/80 dark:border-zinc-800/80 bg-white/70 dark:bg-zinc-900/70 backdrop-blur-xl p-4 sticky top-0 h-screen justify-between z-30">
+      <aside className="hidden md:flex flex-col w-64 border-l border-zinc-200/70 dark:border-white/10 bg-white/60 dark:bg-zinc-900/60 backdrop-blur-2xl p-4 sticky top-0 h-screen justify-between z-30 shadow-[0_4px_24px_rgba(0,0,0,0.02)]">
         <div className="space-y-6">
           {/* Brand Header */}
           <div className="flex items-center justify-between px-2 py-1">
-            <Link href="/admin" className="flex items-center gap-2.5">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-600 text-white shadow-md shadow-blue-500/20">
+            <Link href="/admin" className="flex items-center gap-2.5 group">
+              <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/20 group-hover:scale-105 transition-transform">
                 <GraduationCap className="h-5 w-5" />
               </div>
               <div>
-                <span className="font-bold text-sm text-zinc-900 dark:text-zinc-100 leading-none">
+                <span className="font-bold text-sm text-zinc-900 dark:text-zinc-100 leading-none block">
                   منصة الچوو
                 </span>
-                <span className="block text-[10px] font-medium text-blue-600 dark:text-blue-400 mt-0.5">
+                <span className="block text-[10px] font-bold text-blue-600 dark:text-blue-400 mt-0.5">
                   لوحة الإدارة
                 </span>
               </div>
@@ -70,9 +76,9 @@ export default async function AdminLayout({
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:text-zinc-100 dark:hover:bg-zinc-800/70 transition-all"
+                  className="flex items-center gap-3 px-3 py-2.5 rounded-2xl text-xs sm:text-sm font-semibold text-zinc-600 hover:text-zinc-900 hover:bg-white/90 hover:shadow-xs dark:text-zinc-400 dark:hover:text-zinc-100 dark:hover:bg-zinc-800/80 transition-all border border-transparent hover:border-zinc-200/60 dark:hover:border-zinc-700/60"
                 >
-                  <Icon className="h-4 w-4 shrink-0" />
+                  <Icon className="h-4 w-4 shrink-0 text-zinc-500" />
                   <span>{item.label}</span>
                 </Link>
               );
@@ -81,11 +87,11 @@ export default async function AdminLayout({
         </div>
 
         {/* User Info & Footer actions */}
-        <div className="space-y-3 pt-4 border-t border-zinc-200/70 dark:border-zinc-800/70">
+        <div className="space-y-3 pt-4 border-t border-zinc-200/60 dark:border-white/10">
           <Link
             href="/dashboard"
             target="_blank"
-            className="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium text-zinc-500 hover:text-blue-600 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:text-blue-400 dark:hover:bg-zinc-800/50 transition-colors"
+            className="flex items-center justify-between px-3 py-2 rounded-2xl text-xs font-semibold text-zinc-600 hover:text-blue-600 hover:bg-white/80 dark:text-zinc-400 dark:hover:text-blue-400 dark:hover:bg-zinc-800/50 transition-colors border border-transparent hover:border-zinc-200/60"
           >
             <span className="flex items-center gap-2">
               <ExternalLink className="h-3.5 w-3.5" />
@@ -95,13 +101,13 @@ export default async function AdminLayout({
 
           <div className="flex items-center justify-between px-2 pt-1">
             <div className="flex items-center gap-2.5 min-w-0">
-              <Avatar className="h-8 w-8">
-                <AvatarFallback className="bg-blue-100 text-blue-800 dark:bg-blue-900/60 dark:text-blue-200 text-xs">
+              <Avatar className="h-8 w-8 ring-2 ring-blue-500/20">
+                <AvatarFallback className="bg-gradient-to-tr from-blue-600 to-indigo-600 text-white text-xs font-bold">
                   {session.profile.full_name.charAt(0)}
                 </AvatarFallback>
               </Avatar>
               <div className="min-w-0 flex-1">
-                <p className="text-xs font-semibold text-zinc-900 dark:text-zinc-100 truncate">
+                <p className="text-xs font-bold text-zinc-900 dark:text-zinc-100 truncate">
                   {session.profile.full_name}
                 </p>
                 <p className="text-[11px] text-zinc-400 truncate dir-ltr text-right">
@@ -115,7 +121,7 @@ export default async function AdminLayout({
                 type="submit"
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8 rounded-lg text-zinc-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30"
+                className="h-8 w-8 rounded-xl text-zinc-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30"
                 title="تسجيل الخروج"
               >
                 <LogOut className="h-4 w-4" />
@@ -126,9 +132,9 @@ export default async function AdminLayout({
       </aside>
 
       {/* Mobile Topbar */}
-      <header className="md:hidden flex items-center justify-between p-4 border-b border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md sticky top-0 z-30">
+      <header className="md:hidden flex items-center justify-between p-4 border-b border-zinc-200/70 dark:border-white/10 bg-white/70 dark:bg-zinc-900/70 backdrop-blur-2xl sticky top-0 z-30 shadow-xs">
         <Link href="/admin" className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-blue-600 text-white">
+          <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white shadow-xs">
             <GraduationCap className="h-4 w-4" />
           </div>
           <span className="font-bold text-sm">منصة الچوو | الإدارة</span>
@@ -140,7 +146,7 @@ export default async function AdminLayout({
               type="submit"
               variant="ghost"
               size="icon"
-              className="h-8 w-8 rounded-lg text-zinc-400"
+              className="h-8 w-8 rounded-xl text-zinc-400"
             >
               <LogOut className="h-4 w-4" />
             </Button>
@@ -149,16 +155,16 @@ export default async function AdminLayout({
       </header>
 
       {/* Mobile Bottom Navigation for Admin */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-lg border-t border-zinc-200 dark:border-zinc-800 flex items-center justify-around py-2 px-1 safe-bottom">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-2xl border-t border-zinc-200/70 dark:border-white/10 flex items-center justify-around py-2 px-1 safe-bottom shadow-lg">
         {navItems.slice(0, 5).map((item) => {
           const Icon = item.icon;
           return (
             <Link
               key={item.href}
               href={item.href}
-              className="flex flex-col items-center gap-1 p-1 text-zinc-500 hover:text-blue-600 dark:text-zinc-400 dark:hover:text-blue-400 text-[10px] font-medium"
+              className="flex flex-col items-center gap-1 p-1 text-zinc-500 hover:text-blue-600 dark:text-zinc-400 dark:hover:text-blue-400 text-[10px] font-semibold"
             >
-              <Icon className="h-5 w-5" />
+              <Icon className="h-4 w-4" />
               <span>{item.label.split(" ")[0]}</span>
             </Link>
           );

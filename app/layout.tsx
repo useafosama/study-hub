@@ -50,11 +50,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ar" dir="rtl" suppressHydrationWarning className={cairo.variable}>
-      <body className="min-h-screen bg-zinc-50 font-sans text-zinc-900 antialiased dark:bg-zinc-950 dark:text-zinc-50 selection:bg-blue-600 selection:text-white">
+      <body className="min-h-screen font-sans text-zinc-900 antialiased dark:text-zinc-50 selection:bg-blue-600 selection:text-white relative">
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
-          enableSystem
+          defaultTheme="light"
+          enableSystem={false}
           disableTransitionOnChange
         >
           {children}
