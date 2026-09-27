@@ -2,31 +2,31 @@
 
 @layer base {
   :root {
-    --background: 215 28% 97%;
-    --foreground: 224 71.4% 4.1%;
+    --background: 210 40% 98%;
+    --foreground: 222.2 84% 4.9%;
     --card: 0 0% 100%;
-    --card-foreground: 224 71.4% 4.1%;
+    --card-foreground: 222.2 84% 4.9%;
     --popover: 0 0% 100%;
-    --popover-foreground: 224 71.4% 4.1%;
+    --popover-foreground: 222.2 84% 4.9%;
     --primary: 221.2 83.2% 53.3%;
     --primary-foreground: 210 40% 98%;
-    --secondary: 220 14.3% 95.9%;
-    --secondary-foreground: 220.9 39.3% 11%;
-    --muted: 220 14.3% 95.9%;
-    --muted-foreground: 220 8.9% 46.1%;
-    --accent: 220 14.3% 95.9%;
-    --accent-foreground: 220.9 39.3% 11%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
     --ring: 221.2 83.2% 53.3%;
     --radius: 1.25rem;
   }
 }
 
 * {
-  border-color: hsl(var(--border));
+  border-color: #e2e8f0;
 }
 
 body {
@@ -36,10 +36,10 @@ body {
   font-feature-settings: "rlig" 1, "calt" 1;
   -webkit-tap-highlight-color: transparent;
   background-image: 
-    radial-gradient(circle at 15% 15%, rgba(59, 130, 246, 0.08) 0px, transparent 40%),
-    radial-gradient(circle at 85% 20%, rgba(147, 51, 234, 0.06) 0px, transparent 40%),
-    radial-gradient(circle at 50% 75%, rgba(6, 182, 212, 0.06) 0px, transparent 45%),
-    radial-gradient(circle at 80% 85%, rgba(249, 115, 22, 0.04) 0px, transparent 35%);
+    radial-gradient(circle at 10% 10%, rgba(59, 130, 246, 0.07) 0px, transparent 45%),
+    radial-gradient(circle at 90% 15%, rgba(147, 51, 234, 0.05) 0px, transparent 45%),
+    radial-gradient(circle at 50% 85%, rgba(14, 165, 233, 0.06) 0px, transparent 50%),
+    radial-gradient(circle at 80% 90%, rgba(249, 115, 22, 0.04) 0px, transparent 40%);
   background-attachment: fixed;
 }
 
@@ -52,19 +52,19 @@ body {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.14);
+  background: rgba(0, 0, 0, 0.15);
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.28);
+  background: rgba(0, 0, 0, 0.3);
 }
 
-/* Apple Light Glassmorphism Utility Classes */
+/* Apple Light Frosted Glass Panels */
 .glass-panel {
-  background: rgba(255, 255, 255, 0.82);
+  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(28px);
   -webkit-backdrop-filter: blur(28px);
-  border: 1px solid rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.95);
   box-shadow: 
     0 10px 30px -5px rgba(0, 0, 0, 0.03),
     0 2px 8px -2px rgba(0, 0, 0, 0.02),
@@ -74,14 +74,14 @@ body {
 }
 
 .glass-card-interactive {
-  background: rgba(255, 255, 255, 0.78);
+  background: rgba(255, 255, 255, 0.82);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.9);
   box-shadow: 
     0 4px 20px -2px rgba(0, 0, 0, 0.03),
     0 1px 4px -1px rgba(0, 0, 0, 0.02),
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.95);
+    inset 0 1px 0 0 rgba(255, 255, 255, 1);
   border-radius: 1.5rem;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform, box-shadow;
@@ -89,12 +89,30 @@ body {
 
 .glass-card-interactive:hover {
   transform: translateY(-4px);
-  background: rgba(255, 255, 255, 0.94);
-  border-color: rgba(59, 130, 246, 0.35);
+  background: rgba(255, 255, 255, 0.96);
+  border-color: rgba(59, 130, 246, 0.4);
   box-shadow: 
     0 20px 40px -12px rgba(37, 99, 235, 0.12),
     0 8px 16px -4px rgba(0, 0, 0, 0.03),
     inset 0 1px 0 0 rgba(255, 255, 255, 1);
+}
+
+/* Apple Legacy support classes mapping to frosted glass */
+.apple-card {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.03);
+  border-radius: 1.25rem;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.apple-card-hover:hover {
+  transform: translateY(-3px);
+  background: #ffffff;
+  border-color: rgba(59, 130, 246, 0.4);
+  box-shadow: 0 15px 35px -5px rgba(37, 99, 235, 0.1);
 }
 
 /* Glossy Apple Button with subtle sheen */
@@ -102,7 +120,7 @@ body {
   position: relative;
   overflow: hidden;
   background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%);
-  border-top: 1px solid rgba(255, 255, 255, 0.4);
+  border-top: 1px solid rgba(255, 255, 255, 0.45);
   box-shadow: 0 4px 16px -2px rgba(37, 99, 235, 0.35);
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
