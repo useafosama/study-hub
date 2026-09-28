@@ -76,9 +76,10 @@ export function ContentManager({ subject, initialContents }: ContentManagerProps
   const [contentTypeToAdd, setContentTypeToAdd] = React.useState<"lecture" | "section">("lecture");
   const [isPending, setIsPending] = React.useState(false);
 
-  // Live video preview test in form
-  const [videoUrlInput, setVideoUrlInput] = React.useState("");
-  const detectedVideoId = extractYouTubeVideoId(videoUrlInput);
+  // Dynamic Multi-Video state
+  const [videos, setVideos] = React.useState<{ id: string; title: string; url: string }[]>([
+    { id: "1", title: "مقطع فيديو الشرح", url: "" },
+  ]);
 
   const filteredContents = contents.filter((c) => {
     if (activeTab === "all") return true;
@@ -90,15 +91,47 @@ export function ContentManager({ subject, initialContents }: ContentManagerProps
 
   const handleOpenAdd = (type: "lecture" | "section" = "lecture") => {
     setContentTypeToAdd(type);
-    setVideoUrlInput("");
+    setVideos([{ id: "1", title: "مقطع فيديو الشرح (الجزء 1)", url: "" }]);
     setIsAddOpen(true);
   };
 
   const handleOpenEdit = (content: Content) => {
     setSelectedContent(content);
-    const videoRes = content.resources?.find((r) => r.type === "video");
-    setVideoUrlInput(videoRes?.url || "");
+    const existingVideos = content.resources
+      ?.filter((r) => r.type === "video")
+      .map((r, i) => ({
+        id: r.id || `${Date.now()}_${i}`,
+        title: r.title || `فيديو ${i + 1}`,
+        url: r.url,
+      })) || [];
+
+    setVideos(
+      existingVideos.length > 0
+        ? existingVideos
+        : [{ id: "1", title: "مقطع فيديو الشرح", url: "" }]
+    );
     setIsEditOpen(true);
+  };
+
+  const handleAddVideoField = () => {
+    setVideos((prev) => [
+      ...prev,
+      {
+        id: `${Date.now()}_${prev.length + 1}`,
+        title: `الجزء ${prev.length + 1}`,
+        url: "",
+      },
+    ]);
+  };
+
+  const handleRemoveVideoField = (id: string) => {
+    setVideos((prev) => (prev.length > 1 ? prev.filter((v) => v.id !== id) : prev));
+  };
+
+  const handleUpdateVideoField = (id: string, field: "title" | "url", value: string) => {
+    setVideos((prev) =>
+      prev.map((v) => (v.id === id ? { ...v, [field]: value } : v))
+    );
   };
 
   const handleOpenDelete = (content: Content) => {
@@ -112,6 +145,10 @@ export function ContentManager({ subject, initialContents }: ContentManagerProps
     const formData = new FormData(e.currentTarget);
     formData.append("subject_id", subject.id);
     formData.append("type", contentTypeToAdd);
+
+    // Filter valid videos with non-empty URL
+    const validVideos = videos.filter((v) => v.url.trim().length > 0);
+    formData.append("videos_json", JSON.stringify(validVideos));
 
     try {
       const res = await createContentWithResourcesAction(formData);
@@ -136,6 +173,9 @@ export function ContentManager({ subject, initialContents }: ContentManagerProps
     const formData = new FormData(e.currentTarget);
     formData.append("id", selectedContent.id);
     formData.append("subject_id", subject.id);
+
+    const validVideos = videos.filter((v) => v.url.trim().length > 0);
+    formData.append("videos_json", JSON.stringify(validVideos));
 
     try {
       const res = await updateContentWithResourcesAction(formData);
@@ -301,9 +341,9 @@ export function ContentManager({ subject, initialContents }: ContentManagerProps
       ) : (
         <div className="space-y-3">
           {filteredContents.map((content, index) => {
-            const videoRes = content.resources?.find((r) => r.type === "video");
-            const pdfRes = content.resources?.find((r) => r.type === "pdf");
-            const linkRes = content.resources?.find((r) => r.type === "link");
+            const videoResources = content.resources?.filter((r) => r.type === "video") || [];
+            const pdfResources = content.resources?.filter((r) => r.type === "pdf") || [];
+            const linkResources = content.resources?.filter((r) => r.type === "link") || [];
 
             return (
               <Card
@@ -361,20 +401,28 @@ export function ContentManager({ subject, initialContents }: ContentManagerProps
 
                     {/* Resources attached badges */}
                     <div className="flex flex-wrap items-center gap-2 pt-1">
-                      {videoRes && (
-                        <span className="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded-lg bg-red-50 text-red-700 dark:bg-red-950/40 dark:text-red-300 font-medium">
+                      {videoResources.length > 0 && (
+                        <span className="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded-lg bg-red-500/10 text-red-600 dark:text-red-400 font-medium border border-red-500/20">
                           <Video className="h-3 w-3" />
-                          <span>فيديو YouTube</span>
+                          <span>
+                            {videoResources.length === 1
+                              ? "فيديو YouTube"
+                              : `${videoResources.length} فيديوهات`}
+                          </span>
                         </span>
                       )}
-                      {pdfRes && (
-                        <span className="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded-lg bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 font-medium">
+                      {pdfResources.length > 0 && (
+                        <span className="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded-lg bg-amber-500/10 text-amber-600 dark:text-amber-400 font-medium border border-amber-500/20">
                           <FileText className="h-3 w-3" />
-                          <span>ملف PDF</span>
+                          <span>
+                            {pdfResources.length === 1
+                              ? "ملف PDF"
+                              : `${pdfResources.length} ملفات PDF`}
+                          </span>
                         </span>
                       )}
-                      {linkRes && (
-                        <span className="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded-lg bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300 font-medium">
+                      {linkResources.length > 0 && (
+                        <span className="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded-lg bg-blue-500/10 text-blue-600 dark:text-blue-400 font-medium border border-blue-500/20">
                           <LinkIcon className="h-3 w-3" />
                           <span>رابط خارجي</span>
                         </span>
@@ -433,13 +481,13 @@ export function ContentManager({ subject, initialContents }: ContentManagerProps
 
       {/* Modal: Add Content */}
       <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
-        <DialogContent className="max-w-lg">
+        <DialogContent className="max-w-xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
               إضافة {contentTypeToAdd === "lecture" ? "محاضرة جديدة" : "سكشن جديد"}
             </DialogTitle>
             <DialogDescription>
-              أدخل العنوان، والروابط الخارجية للمحاضرة (YouTube أو PDF).
+              أدخل العنوان ومقاطع الفيديو (يمكنك إضافة أكثر من فيديو) والملفات المرفقة.
             </DialogDescription>
           </DialogHeader>
 
@@ -464,37 +512,94 @@ export function ContentManager({ subject, initialContents }: ContentManagerProps
               />
             </div>
 
-            {/* Resources Inputs Section */}
+            {/* Multiple Videos Section */}
             <div className="space-y-3 pt-3 border-t border-border/60">
-              <h4 className="text-xs font-semibold text-foreground flex items-center gap-1.5">
-                <Video className="h-3.5 w-3.5 text-red-500" />
-                <span>رابط فيديو YouTube (اختياري)</span>
-              </h4>
-              <div className="space-y-1.5">
-                <Input
-                  name="video_url"
-                  placeholder="https://www.youtube.com/watch?v=..."
-                  dir="ltr"
-                  value={videoUrlInput}
-                  onChange={(e) => setVideoUrlInput(e.target.value)}
-                  className="rounded-xl text-xs font-mono"
-                />
-                {videoUrlInput && (
-                  <p className="text-[11px] flex items-center gap-1">
-                    {detectedVideoId ? (
-                      <span className="text-emerald-600 dark:text-emerald-400 font-medium">
-                        ✓ تم التعرف على معرف الفيديو ({detectedVideoId})
-                      </span>
-                    ) : (
-                      <span className="text-rose-500">
-                        ✕ يرجى إدخال رابط YouTube صالح
-                      </span>
-                    )}
-                  </p>
-                )}
+              <div className="flex items-center justify-between">
+                <h4 className="text-xs font-bold text-foreground flex items-center gap-1.5">
+                  <Video className="h-4 w-4 text-red-500" />
+                  <span>مقاطع فيديو YouTube ({videos.length})</span>
+                </h4>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={handleAddVideoField}
+                  className="h-7 rounded-lg text-xs gap-1 border-dashed"
+                >
+                  <Plus className="h-3.5 w-3.5" />
+                  <span>إضافة فيديو آخر</span>
+                </Button>
+              </div>
+
+              <div className="space-y-3">
+                {videos.map((vid, idx) => {
+                  const detectedId = extractYouTubeVideoId(vid.url);
+                  return (
+                    <div
+                      key={vid.id}
+                      className="p-3 rounded-2xl border border-border/70 bg-secondary/20 space-y-2 relative"
+                    >
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-[11px] font-semibold text-primary">
+                          فيديو #{idx + 1}
+                        </span>
+                        {videos.length > 1 && (
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => handleRemoveVideoField(vid.id)}
+                            className="h-6 w-6 rounded-md text-destructive hover:bg-destructive/10"
+                            title="حذف هذا الفيديو"
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </Button>
+                        )}
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                        <div className="sm:col-span-1 space-y-1">
+                          <label className="text-[10px] text-muted-foreground">عنوان الجزء / الفيديو</label>
+                          <Input
+                            placeholder={`مثال: الجزء ${idx + 1}`}
+                            value={vid.title}
+                            onChange={(e) => handleUpdateVideoField(vid.id, "title", e.target.value)}
+                            className="rounded-xl text-xs h-9"
+                          />
+                        </div>
+
+                        <div className="sm:col-span-2 space-y-1">
+                          <label className="text-[10px] text-muted-foreground">رابط YouTube</label>
+                          <Input
+                            placeholder="https://www.youtube.com/watch?v=..."
+                            dir="ltr"
+                            value={vid.url}
+                            onChange={(e) => handleUpdateVideoField(vid.id, "url", e.target.value)}
+                            className="rounded-xl text-xs font-mono h-9"
+                          />
+                        </div>
+                      </div>
+
+                      {vid.url && (
+                        <p className="text-[11px] flex items-center gap-1">
+                          {detectedId ? (
+                            <span className="text-emerald-600 dark:text-emerald-400 font-medium">
+                              ✓ تم التعرف على معرف الفيديو ({detectedId})
+                            </span>
+                          ) : (
+                            <span className="text-destructive">
+                              ✕ يرجى إدخال رابط YouTube صالح
+                            </span>
+                          )}
+                        </p>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             </div>
 
+            {/* PDF Section */}
             <div className="space-y-3 pt-2 border-t border-border/60">
               <h4 className="text-xs font-semibold text-foreground flex items-center gap-1.5">
                 <FileText className="h-3.5 w-3.5 text-amber-500" />
@@ -508,6 +613,7 @@ export function ContentManager({ subject, initialContents }: ContentManagerProps
               />
             </div>
 
+            {/* Reference Link Section */}
             <div className="space-y-3 pt-2 border-t border-border/60">
               <h4 className="text-xs font-semibold text-foreground flex items-center gap-1.5">
                 <LinkIcon className="h-3.5 w-3.5 text-primary" />
@@ -548,11 +654,11 @@ export function ContentManager({ subject, initialContents }: ContentManagerProps
 
       {/* Modal: Edit Content */}
       <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
-        <DialogContent className="max-w-lg">
+        <DialogContent className="max-w-xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>تعديل المحتوى والمرفقات</DialogTitle>
             <DialogDescription>
-              تعديل تفاصيل المحتوى والروابط المرفقة معه.
+              تعديل تفاصيل المحتوى والروابط المرفقة معه مع إمكانية إضافة وتعديل مقاطع الفيديو المتعددة.
             </DialogDescription>
           </DialogHeader>
 
@@ -604,21 +710,94 @@ export function ContentManager({ subject, initialContents }: ContentManagerProps
                 />
               </div>
 
-              {/* Edit Resources */}
+              {/* Edit Multiple Videos */}
               <div className="space-y-3 pt-3 border-t border-border/60">
-                <h4 className="text-xs font-semibold text-foreground flex items-center gap-1.5">
-                  <Video className="h-3.5 w-3.5 text-red-500" />
-                  <span>رابط فيديو YouTube</span>
-                </h4>
-                <Input
-                  name="video_url"
-                  defaultValue={selectedContent.resources?.find((r) => r.type === "video")?.url || ""}
-                  placeholder="https://www.youtube.com/watch?v=..."
-                  dir="ltr"
-                  className="rounded-xl text-xs font-mono"
-                />
+                <div className="flex items-center justify-between">
+                  <h4 className="text-xs font-bold text-foreground flex items-center gap-1.5">
+                    <Video className="h-4 w-4 text-red-500" />
+                    <span>مقاطع فيديو YouTube ({videos.length})</span>
+                  </h4>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={handleAddVideoField}
+                    className="h-7 rounded-lg text-xs gap-1 border-dashed"
+                  >
+                    <Plus className="h-3.5 w-3.5" />
+                    <span>إضافة فيديو آخر</span>
+                  </Button>
+                </div>
+
+                <div className="space-y-3">
+                  {videos.map((vid, idx) => {
+                    const detectedId = extractYouTubeVideoId(vid.url);
+                    return (
+                      <div
+                        key={vid.id}
+                        className="p-3 rounded-2xl border border-border/70 bg-secondary/20 space-y-2 relative"
+                      >
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="text-[11px] font-semibold text-primary">
+                            فيديو #{idx + 1}
+                          </span>
+                          {videos.length > 1 && (
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => handleRemoveVideoField(vid.id)}
+                              className="h-6 w-6 rounded-md text-destructive hover:bg-destructive/10"
+                              title="حذف هذا الفيديو"
+                            >
+                              <Trash2 className="h-3.5 w-3.5" />
+                            </Button>
+                          )}
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                          <div className="sm:col-span-1 space-y-1">
+                            <label className="text-[10px] text-muted-foreground">عنوان الجزء / الفيديو</label>
+                            <Input
+                              placeholder={`مثال: الجزء ${idx + 1}`}
+                              value={vid.title}
+                              onChange={(e) => handleUpdateVideoField(vid.id, "title", e.target.value)}
+                              className="rounded-xl text-xs h-9"
+                            />
+                          </div>
+
+                          <div className="sm:col-span-2 space-y-1">
+                            <label className="text-[10px] text-muted-foreground">رابط YouTube</label>
+                            <Input
+                              placeholder="https://www.youtube.com/watch?v=..."
+                              dir="ltr"
+                              value={vid.url}
+                              onChange={(e) => handleUpdateVideoField(vid.id, "url", e.target.value)}
+                              className="rounded-xl text-xs font-mono h-9"
+                            />
+                          </div>
+                        </div>
+
+                        {vid.url && (
+                          <p className="text-[11px] flex items-center gap-1">
+                            {detectedId ? (
+                              <span className="text-emerald-600 dark:text-emerald-400 font-medium">
+                                ✓ تم التعرف على معرف الفيديو ({detectedId})
+                              </span>
+                            ) : (
+                              <span className="text-destructive">
+                                ✕ يرجى إدخال رابط YouTube صالح
+                              </span>
+                            )}
+                          </p>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
 
+              {/* Edit PDF */}
               <div className="space-y-3 pt-2 border-t border-border/60">
                 <h4 className="text-xs font-semibold text-foreground flex items-center gap-1.5">
                   <FileText className="h-3.5 w-3.5 text-amber-500" />
@@ -633,6 +812,7 @@ export function ContentManager({ subject, initialContents }: ContentManagerProps
                 />
               </div>
 
+              {/* Edit Link */}
               <div className="space-y-3 pt-2 border-t border-border/60">
                 <h4 className="text-xs font-semibold text-foreground flex items-center gap-1.5">
                   <LinkIcon className="h-3.5 w-3.5 text-primary" />

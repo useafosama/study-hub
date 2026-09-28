@@ -99,9 +99,12 @@ export function ContentViewer({
     }
   };
 
-  const videoResource = content.resources?.find((r) => r.type === "video");
+  const videoResources = content.resources?.filter((r) => r.type === "video") || [];
   const pdfResources = content.resources?.filter((r) => r.type === "pdf") || [];
   const linkResources = content.resources?.filter((r) => r.type === "link") || [];
+
+  const [activeVideoIndex, setActiveVideoIndex] = React.useState(0);
+  const currentVideo = videoResources[activeVideoIndex] || videoResources[0];
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto">
@@ -164,12 +167,60 @@ export function ContentViewer({
       </div>
 
       {/* YouTube Video Section */}
-      {videoResource ? (
-        <div className="space-y-2">
-          <YouTubePlayer
-            url={videoResource.url}
-            title={videoResource.title || content.title}
-          />
+      {videoResources.length > 0 ? (
+        <div className="space-y-3">
+          {/* Multiple Videos Selector Tabs */}
+          {videoResources.length > 1 && (
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 p-3 rounded-2xl bg-secondary/40 border border-border/70 backdrop-blur-md">
+              <div className="flex items-center gap-2">
+                <span className="flex h-2 w-2 rounded-full bg-primary animate-pulse" />
+                <span className="text-xs font-bold text-foreground">
+                  أجزاء المحاضرة ({videoResources.length} مقاطع فيديو):
+                </span>
+              </div>
+              <div className="flex flex-wrap items-center gap-1.5">
+                {videoResources.map((vid, idx) => {
+                  const isActive = activeVideoIndex === idx;
+                  return (
+                    <button
+                      key={vid.id || idx}
+                      type="button"
+                      onClick={() => setActiveVideoIndex(idx)}
+                      className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 active:scale-95 ${
+                        isActive
+                          ? "bg-primary text-primary-foreground shadow-sm font-bold"
+                          : "bg-card/80 hover:bg-card text-muted-foreground hover:text-foreground border border-border/60"
+                      }`}
+                    >
+                      <span className="flex h-4 w-4 rounded-full items-center justify-center bg-black/10 dark:bg-white/15 text-[10px]">
+                        {idx + 1}
+                      </span>
+                      <span>{vid.title || `الجزء ${idx + 1}`}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* Active Video Player */}
+          {currentVideo && (
+            <div className="space-y-2">
+              <YouTubePlayer
+                key={currentVideo.id || currentVideo.url}
+                url={currentVideo.url}
+                title={currentVideo.title || content.title}
+              />
+              {videoResources.length > 1 && (
+                <div className="flex items-center justify-between px-1 text-xs text-muted-foreground">
+                  <span className="font-medium text-foreground">
+                    المشغل حالياً: {currentVideo.title || `الجزء ${activeVideoIndex + 1}`}
+                  </span>
+                  <span>(فيديو {activeVideoIndex + 1} من {videoResources.length})</span>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       ) : (
         <div className="p-8 rounded-2xl border border-dashed border-border text-center text-xs text-muted-foreground bg-muted/20">

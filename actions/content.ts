@@ -59,8 +59,23 @@ export async function createContentWithResourcesAction(formData: FormData) {
   const sort_order = parseInt((formData.get("sort_order") as string) || "0", 10);
 
   // Resource inputs
-  const video_url = (formData.get("video_url") as string) || "";
-  const video_title = (formData.get("video_title") as string) || "مقطع فيديو الشرح";
+  const videosJson = formData.get("videos_json") as string;
+  let videoList: { title: string; url: string }[] = [];
+
+  if (videosJson) {
+    try {
+      videoList = JSON.parse(videosJson);
+    } catch {
+      videoList = [];
+    }
+  } else {
+    const singleVideoUrl = (formData.get("video_url") as string) || "";
+    const singleVideoTitle = (formData.get("video_title") as string) || "مقطع فيديو الشرح";
+    if (singleVideoUrl.trim()) {
+      videoList.push({ title: singleVideoTitle, url: singleVideoUrl.trim() });
+    }
+  }
+
   const pdf_url = (formData.get("pdf_url") as string) || "";
   const pdf_title = (formData.get("pdf_title") as string) || "ملف المحاضرة (PDF)";
   const link_url = (formData.get("link_url") as string) || "";
@@ -100,30 +115,34 @@ export async function createContentWithResourcesAction(formData: FormData) {
   const contentId = content.id;
   const resourcesToInsert: any[] = [];
 
-  // 2. Validate & attach Video resource if present
-  if (video_url.trim()) {
-    const videoValidation = ResourceSchema.safeParse({
-      content_id: contentId,
-      type: "video",
-      title: video_title,
-      url: video_url.trim(),
-      sort_order: 0,
-      is_published: true,
-    });
+  // 2. Validate & attach all Video resources
+  for (let i = 0; i < videoList.length; i++) {
+    const v = videoList[i];
+    if (v.url && v.url.trim()) {
+      const vTitle = v.title?.trim() || (videoList.length > 1 ? `فيديو ${i + 1}` : "مقطع فيديو الشرح");
+      const videoValidation = ResourceSchema.safeParse({
+        content_id: contentId,
+        type: "video",
+        title: vTitle,
+        url: v.url.trim(),
+        sort_order: i,
+        is_published: true,
+      });
 
-    if (!videoValidation.success) {
-      await supabase.from("contents").delete().eq("id", contentId);
-      return { error: videoValidation.error.issues[0]?.message || "رابط الفيديو غير صالح" };
+      if (!videoValidation.success) {
+        await supabase.from("contents").delete().eq("id", contentId);
+        return { error: videoValidation.error.issues[0]?.message || `رابط الفيديو ${i + 1} غير صالح` };
+      }
+
+      resourcesToInsert.push({
+        content_id: contentId,
+        type: "video",
+        title: vTitle,
+        url: v.url.trim(),
+        sort_order: i,
+        is_published: true,
+      });
     }
-
-    resourcesToInsert.push({
-      content_id: contentId,
-      type: "video",
-      title: video_title,
-      url: video_url.trim(),
-      sort_order: 0,
-      is_published: true,
-    });
   }
 
   // 3. Validate & attach PDF resource if present
@@ -133,7 +152,7 @@ export async function createContentWithResourcesAction(formData: FormData) {
       type: "pdf",
       title: pdf_title,
       url: pdf_url.trim(),
-      sort_order: 1,
+      sort_order: resourcesToInsert.length,
       is_published: true,
     });
 
@@ -147,7 +166,7 @@ export async function createContentWithResourcesAction(formData: FormData) {
       type: "pdf",
       title: pdf_title,
       url: pdf_url.trim(),
-      sort_order: 1,
+      sort_order: resourcesToInsert.length,
       is_published: true,
     });
   }
@@ -159,7 +178,7 @@ export async function createContentWithResourcesAction(formData: FormData) {
       type: "link",
       title: link_title,
       url: link_url.trim(),
-      sort_order: 2,
+      sort_order: resourcesToInsert.length,
       is_published: true,
     });
 
@@ -173,7 +192,7 @@ export async function createContentWithResourcesAction(formData: FormData) {
       type: "link",
       title: link_title,
       url: link_url.trim(),
-      sort_order: 2,
+      sort_order: resourcesToInsert.length,
       is_published: true,
     });
   }
@@ -212,8 +231,23 @@ export async function updateContentWithResourcesAction(formData: FormData) {
   const sort_order = parseInt((formData.get("sort_order") as string) || "0", 10);
 
   // Resource inputs
-  const video_url = (formData.get("video_url") as string) || "";
-  const video_title = (formData.get("video_title") as string) || "مقطع فيديو الشرح";
+  const videosJson = formData.get("videos_json") as string;
+  let videoList: { title: string; url: string }[] = [];
+
+  if (videosJson) {
+    try {
+      videoList = JSON.parse(videosJson);
+    } catch {
+      videoList = [];
+    }
+  } else {
+    const singleVideoUrl = (formData.get("video_url") as string) || "";
+    const singleVideoTitle = (formData.get("video_title") as string) || "مقطع فيديو الشرح";
+    if (singleVideoUrl.trim()) {
+      videoList.push({ title: singleVideoTitle, url: singleVideoUrl.trim() });
+    }
+  }
+
   const pdf_url = (formData.get("pdf_url") as string) || "";
   const pdf_title = (formData.get("pdf_title") as string) || "ملف المحاضرة (PDF)";
   const link_url = (formData.get("link_url") as string) || "";
@@ -253,15 +287,20 @@ export async function updateContentWithResourcesAction(formData: FormData) {
   await supabase.from("resources").delete().eq("content_id", id);
 
   const resourcesToInsert: any[] = [];
-  if (video_url.trim()) {
-    resourcesToInsert.push({
-      content_id: id,
-      type: "video",
-      title: video_title,
-      url: video_url.trim(),
-      sort_order: 0,
-      is_published: true,
-    });
+
+  for (let i = 0; i < videoList.length; i++) {
+    const v = videoList[i];
+    if (v.url && v.url.trim()) {
+      const vTitle = v.title?.trim() || (videoList.length > 1 ? `فيديو ${i + 1}` : "مقطع فيديو الشرح");
+      resourcesToInsert.push({
+        content_id: id,
+        type: "video",
+        title: vTitle,
+        url: v.url.trim(),
+        sort_order: i,
+        is_published: true,
+      });
+    }
   }
 
   if (pdf_url.trim()) {
@@ -270,7 +309,7 @@ export async function updateContentWithResourcesAction(formData: FormData) {
       type: "pdf",
       title: pdf_title,
       url: pdf_url.trim(),
-      sort_order: 1,
+      sort_order: resourcesToInsert.length,
       is_published: true,
     });
   }
@@ -281,7 +320,7 @@ export async function updateContentWithResourcesAction(formData: FormData) {
       type: "link",
       title: link_title,
       url: link_url.trim(),
-      sort_order: 2,
+      sort_order: resourcesToInsert.length,
       is_published: true,
     });
   }
