@@ -8,6 +8,8 @@ import {
   toggleBookmarkAction,
 } from "@/actions/student";
 import { YouTubePlayer } from "@/components/shared/youtube-player";
+import { EducationalVideoPlayer } from "@/components/shared/educational-video-player";
+import { LectureResourcesPanel } from "@/components/student/lecture-resources-panel";
 import { PDFViewer } from "@/components/shared/pdf-viewer";
 import { SmartNotes } from "@/components/student/smart-notes";
 import { saveRecentViewed } from "@/components/student/continue-learning-widget";
@@ -52,7 +54,21 @@ export function ContentViewer({
   const [isCompleted, setIsCompleted] = React.useState(content.is_completed || false);
   const [isBookmarked, setIsBookmarked] = React.useState(content.is_bookmarked || false);
   const [isTimerDialogOpen, setIsTimerDialogOpen] = React.useState(false);
+  const [seekTimestamp, setSeekTimestamp] = React.useState<number | null>(null);
   const [isPending, setIsPending] = React.useState(false);
+
+  const handleVideoCompletionThreshold = async () => {
+    if (!isCompleted) {
+      try {
+        const res = await toggleContentCompletionAction(content.id, false, subject.id);
+        if (res.success && res.isCompleted) {
+          setIsCompleted(true);
+          toast.success("أحسنت! بلغت نسبة المشاهدة المطلوبة وتم تسجيل إكمال الدرس بنجاح 🎉");
+          router.refresh();
+        }
+      } catch {}
+    }
+  };
 
   // Sync to localStorage on visit
   React.useEffect(() => {
@@ -219,13 +235,16 @@ export function ContentViewer({
             </div>
           )}
 
-          {/* Active Video Player */}
+          {/* Active Educational Video Player */}
           {currentVideo && (
             <div className="space-y-2">
-              <YouTubePlayer
+              <EducationalVideoPlayer
                 key={currentVideo.id || currentVideo.url}
                 url={currentVideo.url}
                 title={currentVideo.title || content.title}
+                contentId={content.id}
+                onCompletionThreshold={handleVideoCompletionThreshold}
+                activeSeekTimestamp={seekTimestamp}
               />
               {videoResources.length > 1 && (
                 <div className="flex items-center justify-between px-1 text-xs text-muted-foreground">
@@ -244,55 +263,17 @@ export function ContentViewer({
         </div>
       )}
 
-      {/* Smart Lecture Notes */}
-      <SmartNotes
+      {/* Unified Lecture Resources & Timeline Panel (Materials, Bookmarks, Timestamp Notes, Smart Notes) */}
+      <LectureResourcesPanel
         contentId={content.id}
         contentTitle={content.title}
         subjectId={subject.id}
         subjectName={subject.name}
         subjectCode={subject.code}
+        pdfResources={pdfResources}
+        linkResources={linkResources}
+        onSeekToTimestamp={(seconds) => setSeekTimestamp(seconds)}
       />
-
-      {/* Materials & Attachments Section */}
-      {(pdfResources.length > 0 || linkResources.length > 0) && (
-        <div className="space-y-3 pt-4 border-t border-border/60">
-          <h2 className="text-base font-bold text-foreground flex items-center gap-2">
-            <FileText className="h-4 w-4 text-red-500" />
-            الملفات والمرفقات الدراسية
-          </h2>
-
-          <div className="space-y-2.5">
-            {pdfResources.map((pdf) => (
-              <PDFViewer key={pdf.id} url={pdf.url} title={pdf.title} />
-            ))}
-
-            {linkResources.map((link) => (
-              <div
-                key={link.id}
-                className="flex items-center justify-between p-4 rounded-2xl border border-border bg-card/60 backdrop-blur-sm shadow-xs"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                    <LinkIcon className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-semibold text-foreground">
-                      {link.title}
-                    </h4>
-                    <p className="text-xs text-muted-foreground">رابط خارجي معتمد</p>
-                  </div>
-                </div>
-                <Button asChild variant="outline" size="sm" className="rounded-xl gap-1.5 text-xs">
-                  <a href={link.url} target="_blank" rel="noopener noreferrer">
-                    <span>زيارة الرابط</span>
-                    <ExternalLink className="h-3.5 w-3.5" />
-                  </a>
-                </Button>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
 
       {/* Navigation Footer (Previous / Next) */}
       <div className="pt-6 border-t border-border/60 flex items-center justify-between gap-4">
