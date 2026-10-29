@@ -53,6 +53,8 @@ export default async function AdminActivityPage() {
         return { label: "تحديث الإعدادات", variant: "default" as const };
       case "study_session":
         return { label: "جلسة مذاكرة", variant: "success" as const };
+      case "create_notification":
+        return { label: "إرسال إشعار", variant: "purple" as const };
       default:
         return { label: action, variant: "secondary" as const };
     }

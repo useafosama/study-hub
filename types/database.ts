@@ -106,6 +106,37 @@ export interface Bookmark {
   subject?: Subject;
 }
 
+export type NotificationType =
+  | "new_lecture"
+  | "new_resource"
+  | "new_quiz"
+  | "announcement"
+  | "study_reminder"
+  | "milestone"
+  | "course_update"
+  | "system";
+
+export interface NotificationItem {
+  id: string;
+  userId?: string | null;
+  subjectId?: string | null;
+  type: NotificationType;
+  title: string;
+  message: string;
+  link?: string | null;
+  read: boolean;
+  createdAt: string;
+}
+
+export interface NotificationPreferences {
+  new_lectures: boolean;
+  new_resources: boolean;
+  announcements: boolean;
+  quiz_notifications: boolean;
+  study_reminders: boolean;
+  progress_milestones: boolean;
+}
+
 export interface PlatformSettings {
   platform_name: string;
   platform_name_en?: string;

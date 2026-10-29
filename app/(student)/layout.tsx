@@ -3,7 +3,9 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth/session";
 import { logoutAction } from "@/actions/auth";
+import { getStudentNotifications } from "@/actions/notifications";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
+import { NotificationBellButton } from "@/components/notifications/notification-bell-button";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
@@ -32,15 +34,18 @@ export default async function StudentLayout({
     redirect("/login");
   }
 
+  const notifData = await getStudentNotifications().catch(() => ({ unreadCount: 0 }));
+  const unreadNotifsCount = notifData.unreadCount || 0;
+
   const navItems = [
     { href: "/dashboard", label: "الرئيسية", icon: LayoutDashboard },
     { href: "/subjects", label: "موادي", icon: BookOpen },
     { href: "/analytics", label: "التحليلات", icon: BarChart3 },
+    { href: "/notifications", label: "الإشعارات والتنبيهات", icon: Bell },
     { href: "/planner", label: "خطة المذاكرة", icon: Calendar },
     { href: "/notes", label: "دفتر ملاحظاتي", icon: FileEdit },
     { href: "/bookmarks", label: "المحفوظات", icon: Bookmark },
     { href: "/search", label: "البحث", icon: Search },
-    { href: "/announcements", label: "الإعلانات", icon: Bell },
     { href: "/profile", label: "الملف الشخصي", icon: User },
   ];
 
@@ -70,7 +75,10 @@ export default async function StudentLayout({
                 </span>
               </div>
             </Link>
-            <ThemeToggle />
+            <div className="flex items-center gap-1">
+              <NotificationBellButton initialUnreadCount={unreadNotifsCount} />
+              <ThemeToggle />
+            </div>
           </div>
 
           {/* Navigation links */}
@@ -146,6 +154,7 @@ export default async function StudentLayout({
           <span className="font-bold text-sm text-foreground">منصة الچوو</span>
         </Link>
         <div className="flex items-center gap-2">
+          <NotificationBellButton initialUnreadCount={unreadNotifsCount} />
           <ThemeToggle />
           <Link href="/profile">
             <Avatar className="h-8 w-8">

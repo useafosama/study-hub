@@ -119,15 +119,18 @@ export default async function StudentDashboardPage() {
           </div>
         </div>
 
-        <div className="glass-card-interactive p-4.5 rounded-3xl flex items-center gap-3.5 group cursor-default">
+        <Link
+          href="/notifications"
+          className="glass-card-interactive p-4.5 rounded-3xl flex items-center gap-3.5 group cursor-pointer hover:border-amber-500/30 transition-all"
+        >
           <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 font-bold border border-amber-500/20 shadow-xs group-hover:scale-110 group-hover:bg-amber-600 group-hover:text-white transition-all duration-300">
             <Bell className="h-5 w-5" />
           </div>
           <div>
-            <div className="text-xs font-semibold text-muted-foreground">التنبيهات</div>
-            <div className="text-lg font-black text-foreground">{announcements.length} إعلان</div>
+            <div className="text-xs font-semibold text-muted-foreground">التنبيهات والإشعارات</div>
+            <div className="text-lg font-black text-foreground">{announcements.length} تنبيه</div>
           </div>
-        </div>
+        </Link>
       </div>
 
       {/* 3. Continue Learning Banner */}
