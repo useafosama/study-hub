@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import {
   Play,
   Pause,
@@ -19,6 +20,7 @@ import {
   Calendar,
   Layers,
   Settings2,
+  ArrowLeft,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -725,9 +727,18 @@ export function FocusTimerWidget({
                   <BarChart3 className="h-4 w-4 text-primary" />
                   <span>تحليلات المذاكرة للأيام السبعة الماضية</span>
                 </h4>
-                <Badge variant="secondary" className="text-[10px]">
-                  محدث لحظياً
-                </Badge>
+                <div className="flex items-center gap-2">
+                  <Link
+                    href="/analytics"
+                    className="text-[11px] font-bold text-primary hover:underline flex items-center gap-1"
+                  >
+                    <span>لوحة التحليلات الكاملة</span>
+                    <ArrowLeft className="h-3 w-3" />
+                  </Link>
+                  <Badge variant="secondary" className="text-[10px]">
+                    محدث لحظياً
+                  </Badge>
+                </div>
               </div>
 
               {/* Weekly Mini Bars Chart */}

@@ -266,6 +266,197 @@ export function getCourseBreakdown(userId?: string) {
 }
 
 /**
+ * Get multi-week trend for the past 4 weeks.
+ */
+export function getWeeklyMultiWeekTrend(sessions: StudySessionRecord[]) {
+  const now = new Date();
+  const weeks: { label: string; rangeStr: string; seconds: number; isCurrent: boolean }[] = [];
+
+  for (let i = 3; i >= 0; i--) {
+    const end = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i * 7 + 1).getTime();
+    const start = end - 7 * 24 * 60 * 60 * 1000;
+
+    const weekSessions = sessions.filter((s) => {
+      const t = new Date(s.endTime || s.startTime).getTime();
+      return t >= start && t < end;
+    });
+
+    const totalSeconds = weekSessions.reduce((acc, s) => acc + (s.duration || 0), 0);
+    const label =
+      i === 0
+        ? "الأسبوع الحالي"
+        : i === 1
+        ? "الأسبوع الماضي"
+        : `قبل ${i} أسابيع`;
+
+    const dStart = new Date(start);
+    const dEnd = new Date(end - 1);
+    const rangeStr = `${dStart.getDate()}/${dStart.getMonth() + 1} - ${dEnd.getDate()}/${dEnd.getMonth() + 1}`;
+
+    weeks.push({
+      label,
+      rangeStr,
+      seconds: totalSeconds,
+      isCurrent: i === 0,
+    });
+  }
+
+  return weeks;
+}
+
+/**
+ * Get monthly trend for the past 6 months.
+ */
+export function getMonthlyStudyTrend(sessions: StudySessionRecord[]) {
+  const now = new Date();
+  const arabicMonths = [
+    "يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو",
+    "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"
+  ];
+  const months: { label: string; yearMonth: string; seconds: number; isCurrent: boolean }[] = [];
+
+  for (let i = 5; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const monthStart = d.getTime();
+    const monthEnd = new Date(d.getFullYear(), d.getMonth() + 1, 1).getTime();
+
+    const monthSessions = sessions.filter((s) => {
+      const t = new Date(s.endTime || s.startTime).getTime();
+      return t >= monthStart && t < monthEnd;
+    });
+
+    const totalSeconds = monthSessions.reduce((acc, s) => acc + (s.duration || 0), 0);
+    const label = arabicMonths[d.getMonth()];
+    const yearMonth = `${d.getFullYear()}-${(d.getMonth() + 1).toString().padStart(2, "0")}`;
+
+    months.push({
+      label,
+      yearMonth,
+      seconds: totalSeconds,
+      isCurrent: i === 0,
+    });
+  }
+
+  return months;
+}
+
+/**
+ * Calculate study patterns from sessions.
+ */
+export function calculateStudyPatterns(sessions: StudySessionRecord[]) {
+  if (!sessions || sessions.length < 2) {
+    return {
+      hasEnoughData: false,
+      totalSessions: sessions?.length || 0,
+      averageSessionDurationSeconds: sessions?.length === 1 ? sessions[0].duration : 0,
+      mostActivePeriod: null,
+      mostActiveDay: null,
+      periodsBreakdown: [] as { name: string; count: number }[],
+    };
+  }
+
+  const hourCounts = new Array(24).fill(0);
+  const dayCounts = new Array(7).fill(0);
+  let totalDuration = 0;
+
+  sessions.forEach((s) => {
+    totalDuration += s.duration || 0;
+    const d = new Date(s.startTime || s.createdAt);
+    if (!isNaN(d.getTime())) {
+      const hr = d.getHours();
+      hourCounts[hr] = (hourCounts[hr] || 0) + 1;
+      const day = d.getDay();
+      dayCounts[day] = (dayCounts[day] || 0) + 1;
+    }
+  });
+
+  const averageSessionDurationSeconds = Math.round(totalDuration / sessions.length);
+
+  // Determine peak period
+  const morningCount = hourCounts.slice(5, 12).reduce((a, b) => a + b, 0);
+  const afternoonCount = hourCounts.slice(12, 17).reduce((a, b) => a + b, 0);
+  const eveningCount = hourCounts.slice(17, 23).reduce((a, b) => a + b, 0);
+  const nightCount = hourCounts[23] + hourCounts.slice(0, 5).reduce((a, b) => a + b, 0);
+
+  const periods = [
+    { name: "الفترة المسائية (5:00 م - 11:00 م)", count: eveningCount },
+    { name: "فترة الظهيرة (12:00 م - 5:00 م)", count: afternoonCount },
+    { name: "فترة الصباح (5:00 ص - 12:00 م)", count: morningCount },
+    { name: "فترة الليل المتأخر (11:00 م - 5:00 ص)", count: nightCount },
+  ];
+  periods.sort((a, b) => b.count - a.count);
+  const mostActivePeriod = periods[0].count > 0 ? periods[0].name : "أوقات متوازنة";
+
+  // Determine peak day
+  const arabicDays = ["الأحد", "الإثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"];
+  let maxDayIdx = 0;
+  for (let i = 1; i < 7; i++) {
+    if (dayCounts[i] > dayCounts[maxDayIdx]) {
+      maxDayIdx = i;
+    }
+  }
+  const mostActiveDay = arabicDays[maxDayIdx];
+
+  return {
+    hasEnoughData: true,
+    totalSessions: sessions.length,
+    averageSessionDurationSeconds,
+    mostActivePeriod,
+    mostActiveDay,
+    periodsBreakdown: periods,
+  };
+}
+
+/**
+ * Merge local sessions and server-side sessions without duplicate IDs.
+ */
+export function mergeStudySessions(
+  localSessions: StudySessionRecord[],
+  serverSessions: {
+    id: string;
+    courseId: string;
+    courseName: string;
+    courseCode: string;
+    lectureTitle?: string | null;
+    duration: number;
+    startTime: string;
+    endTime: string;
+    completionStatus: string;
+  }[]
+): StudySessionRecord[] {
+  const map = new Map<string, StudySessionRecord>();
+
+  // Add server sessions
+  serverSessions.forEach((s) => {
+    map.set(s.id, {
+      id: s.id,
+      userId: "",
+      courseId: s.courseId,
+      courseName: s.courseName,
+      courseCode: s.courseCode,
+      lectureId: null,
+      lectureTitle: s.lectureTitle,
+      startTime: s.startTime,
+      endTime: s.endTime,
+      duration: s.duration,
+      targetDuration: s.duration,
+      completionStatus: s.completionStatus as "completed" | "early_finish",
+      createdAt: new Date(s.startTime).getTime() || Date.now(),
+    });
+  });
+
+  // Add / overwrite with local sessions (which may have richer details)
+  localSessions.forEach((s) => {
+    map.set(s.id, s);
+  });
+
+  return Array.from(map.values()).sort(
+    (a, b) =>
+      new Date(b.endTime || b.startTime).getTime() - new Date(a.endTime || a.startTime).getTime()
+  );
+}
+
+/**
  * Format seconds into mm:ss or hh:mm:ss.
  */
 export function formatTimerDisplay(seconds: number): string {

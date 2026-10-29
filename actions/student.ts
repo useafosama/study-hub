@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { requireAuth } from "@/lib/auth/session";
-import { Subject, Content, Announcement, Bookmark } from "@/types/database";
+import { Subject, Content, Announcement, Bookmark, ContentType } from "@/types/database";
 import { logActivity } from "@/lib/activity/log";
 
 export async function getStudentDashboardData() {
@@ -549,4 +549,221 @@ export async function recordStudySessionAction(params: RecordStudySessionParams)
   revalidatePath("/dashboard");
   revalidatePath("/admin/activity");
   return { success: true };
+}
+
+export interface RecentlyCompletedItem {
+  contentId: string;
+  contentTitle: string;
+  contentType: ContentType;
+  subjectId: string;
+  subjectName: string;
+  subjectCode: string;
+  completedAt: string;
+}
+
+export interface EnrichedSubjectStats extends Subject {
+  total_contents: number;
+  completed_contents: number;
+  remaining_contents: number;
+  progress_percentage: number;
+  exams_count: number;
+  completed_exams_count: number;
+}
+
+export interface StudentAnalyticsData {
+  profile: any;
+  subjects: EnrichedSubjectStats[];
+  totalContentsCount: number;
+  totalCompletedCount: number;
+  overallPercentage: number;
+  completedSubjectsCount: number;
+  recentlyCompletedContents: RecentlyCompletedItem[];
+  serverStudySessions: {
+    id: string;
+    courseId: string;
+    courseName: string;
+    courseCode: string;
+    lectureTitle?: string | null;
+    duration: number;
+    startTime: string;
+    endTime: string;
+    completionStatus: string;
+  }[];
+}
+
+export async function getStudentAnalyticsData(): Promise<StudentAnalyticsData> {
+  const session = await requireAuth();
+  const supabase = await createClient();
+  const userId = session.profile.id;
+
+  // 1. Get assigned published subjects
+  const { data: userSubjects } = await supabase
+    .from("user_subjects")
+    .select(`
+      subject_id,
+      subjects (
+        id,
+        name,
+        code,
+        description,
+        image_url,
+        is_published,
+        sort_order
+      )
+    `)
+    .eq("user_id", userId);
+
+  const subjects: EnrichedSubjectStats[] = [];
+  const assignedSubjectIds: string[] = [];
+
+  if (userSubjects) {
+    for (const item of userSubjects) {
+      const sub = (item as any).subjects;
+      if (sub && sub.is_published) {
+        assignedSubjectIds.push(sub.id);
+        subjects.push({
+          ...sub,
+          total_contents: 0,
+          completed_contents: 0,
+          remaining_contents: 0,
+          progress_percentage: 0,
+          exams_count: 0,
+          completed_exams_count: 0,
+        });
+      }
+    }
+  }
+
+  subjects.sort((a, b) => a.sort_order - b.sort_order);
+
+  let totalContentsCount = 0;
+  let totalCompletedCount = 0;
+  const recentlyCompletedContents: RecentlyCompletedItem[] = [];
+
+  if (assignedSubjectIds.length > 0) {
+    // 2. Query all contents & student's progress in parallel
+    const [contentsRes, progressRes, activityRes] = await Promise.all([
+      supabase
+        .from("contents")
+        .select("id, subject_id, type, title, sort_order")
+        .in("subject_id", assignedSubjectIds)
+        .eq("is_published", true),
+      supabase
+        .from("content_progress")
+        .select("content_id, completed, completed_at, updated_at")
+        .eq("user_id", userId)
+        .eq("completed", true),
+      supabase
+        .from("activity_logs")
+        .select("id, entity_id, metadata, created_at")
+        .eq("user_id", userId)
+        .eq("action", "study_session")
+        .order("created_at", { ascending: false })
+        .limit(200),
+    ]);
+
+    const contents = contentsRes.data || [];
+    const progressList = progressRes.data || [];
+    const activityLogs = activityRes.data || [];
+
+    const completedProgressMap = new Map<string, { completed_at?: string; updated_at?: string }>();
+    progressList.forEach((p) => {
+      completedProgressMap.set(p.content_id, {
+        completed_at: p.completed_at || p.updated_at,
+        updated_at: p.updated_at,
+      });
+    });
+
+    const contentsMap = new Map<string, any>();
+    contents.forEach((c) => contentsMap.set(c.id, c));
+
+    const subjectsMap = new Map<string, EnrichedSubjectStats>();
+    subjects.forEach((s) => subjectsMap.set(s.id, s));
+
+    totalContentsCount = contents.length;
+    totalCompletedCount = progressList.length;
+
+    // Calculate per-subject stats
+    subjects.forEach((s) => {
+      const subjectContents = contents.filter((c) => c.subject_id === s.id);
+      const total = subjectContents.length;
+      const completed = subjectContents.filter((c) => completedProgressMap.has(c.id)).length;
+      const exams = subjectContents.filter((c) => c.type === "exam");
+      const completedExams = exams.filter((c) => completedProgressMap.has(c.id)).length;
+
+      s.total_contents = total;
+      s.completed_contents = completed;
+      s.remaining_contents = Math.max(0, total - completed);
+      s.progress_percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
+      s.exams_count = exams.length;
+      s.completed_exams_count = completedExams;
+    });
+
+    // Populate recently completed contents
+    const sortedProgress = [...progressList].sort((a, b) => {
+      const dateA = new Date(a.completed_at || a.updated_at).getTime();
+      const dateB = new Date(b.completed_at || b.updated_at).getTime();
+      return dateB - dateA;
+    });
+
+    for (const p of sortedProgress.slice(0, 8)) {
+      const content = contentsMap.get(p.content_id);
+      if (content) {
+        const subject = subjectsMap.get(content.subject_id);
+        if (subject) {
+          recentlyCompletedContents.push({
+            contentId: content.id,
+            contentTitle: content.title,
+            contentType: content.type as ContentType,
+            subjectId: subject.id,
+            subjectName: subject.name,
+            subjectCode: subject.code,
+            completedAt: p.completed_at || p.updated_at || new Date().toISOString(),
+          });
+        }
+      }
+    }
+
+    // Extract server study sessions
+    const serverStudySessions = activityLogs.map((log) => {
+      const meta = log.metadata || {};
+      return {
+        id: log.id,
+        courseId: log.entity_id || meta.courseId || "general",
+        courseName: meta.courseName || "مادة دراسية",
+        courseCode: meta.courseCode || "",
+        lectureTitle: meta.lectureTitle || null,
+        duration: meta.duration || 0,
+        startTime: meta.startTime || log.created_at,
+        endTime: meta.endTime || log.created_at,
+        completionStatus: meta.completionStatus || "completed",
+      };
+    });
+
+    const overallPercentage =
+      totalContentsCount > 0 ? Math.round((totalCompletedCount / totalContentsCount) * 100) : 0;
+    const completedSubjectsCount = subjects.filter((s) => s.progress_percentage === 100).length;
+
+    return {
+      profile: session.profile,
+      subjects,
+      totalContentsCount,
+      totalCompletedCount,
+      overallPercentage,
+      completedSubjectsCount,
+      recentlyCompletedContents,
+      serverStudySessions,
+    };
+  }
+
+  return {
+    profile: session.profile,
+    subjects: [],
+    totalContentsCount: 0,
+    totalCompletedCount: 0,
+    overallPercentage: 0,
+    completedSubjectsCount: 0,
+    recentlyCompletedContents: [],
+    serverStudySessions: [],
+  };
 }

@@ -18,6 +18,7 @@ import {
   Shield,
   Calendar,
   FileEdit,
+  BarChart3,
 } from "lucide-react";
 
 export default async function StudentLayout({
@@ -34,6 +35,7 @@ export default async function StudentLayout({
   const navItems = [
     { href: "/dashboard", label: "الرئيسية", icon: LayoutDashboard },
     { href: "/subjects", label: "موادي", icon: BookOpen },
+    { href: "/analytics", label: "التحليلات", icon: BarChart3 },
     { href: "/planner", label: "خطة المذاكرة", icon: Calendar },
     { href: "/notes", label: "دفتر ملاحظاتي", icon: FileEdit },
     { href: "/bookmarks", label: "المحفوظات", icon: Bookmark },
