@@ -45,8 +45,11 @@ import {
   BookOpen,
   Loader2,
   Check,
+  BarChart3,
+  Filter,
 } from "lucide-react";
 import { Profile, Subject } from "@/types/database";
+import { StudentDetailsDrawer } from "./student-details-drawer";
 
 interface UsersManagerProps {
   initialUsers: (Profile & { assigned_subjects: Subject[] })[];
@@ -57,6 +60,12 @@ export function UsersManager({ initialUsers, allSubjects }: UsersManagerProps) {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = React.useState("");
   const [roleFilter, setRoleFilter] = React.useState<"all" | "admin" | "student">("all");
+  const [statusFilter, setStatusFilter] = React.useState<"all" | "active" | "inactive">("all");
+  const [subjectFilter, setSubjectFilter] = React.useState<string>("all");
+
+  // Detailed Student Drawer State
+  const [viewStudentId, setViewStudentId] = React.useState<string | null>(null);
+  const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
 
   // Modal states
   const [isCreateOpen, setIsCreateOpen] = React.useState(false);
@@ -74,8 +83,20 @@ export function UsersManager({ initialUsers, allSubjects }: UsersManagerProps) {
       user.full_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       user.username.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesRole = roleFilter === "all" || user.role === roleFilter;
-    return matchesSearch && matchesRole;
+    const matchesStatus =
+      statusFilter === "all" ||
+      (statusFilter === "active" ? user.is_active : !user.is_active);
+    const matchesSubject =
+      subjectFilter === "all" ||
+      user.assigned_subjects?.some((s: any) => s.id === subjectFilter);
+
+    return matchesSearch && matchesRole && matchesStatus && matchesSubject;
   });
+
+  const handleOpenStudentDetails = (user: any) => {
+    setViewStudentId(user.id);
+    setIsDrawerOpen(true);
+  };
 
   const handleOpenCreate = () => {
     setSelectedSubjectIds([]);
@@ -210,7 +231,8 @@ export function UsersManager({ initialUsers, allSubjects }: UsersManagerProps) {
             className="pr-9 rounded-xl"
           />
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          {/* Role Filter Pills */}
           <Button
             variant={roleFilter === "all" ? "default" : "outline"}
             size="sm"
@@ -235,6 +257,34 @@ export function UsersManager({ initialUsers, allSubjects }: UsersManagerProps) {
           >
             المشرفين ({initialUsers.filter((u) => u.role === "admin").length})
           </Button>
+
+          {/* Status Filter */}
+          <div className="flex items-center gap-1 border-r border-border pr-2 mr-1">
+            <Button
+              variant={statusFilter === "active" ? "default" : "ghost"}
+              size="sm"
+              onClick={() => setStatusFilter(statusFilter === "active" ? "all" : "active")}
+              className="rounded-xl text-xs h-8 text-emerald-600 dark:text-emerald-400"
+            >
+              النشطين فقط
+            </Button>
+          </div>
+
+          {/* Course Filter Dropdown */}
+          {allSubjects.length > 0 && (
+            <select
+              value={subjectFilter}
+              onChange={(e) => setSubjectFilter(e.target.value)}
+              className="h-8 px-2.5 rounded-xl bg-secondary/60 border border-border/80 text-xs font-bold text-foreground focus:outline-none"
+            >
+              <option value="all">كافة المواد المسندة</option>
+              {allSubjects.map((sub) => (
+                <option key={sub.id} value={sub.id}>
+                  {sub.name}
+                </option>
+              ))}
+            </select>
+          )}
         </div>
       </div>
 
@@ -278,9 +328,13 @@ export function UsersManager({ initialUsers, allSubjects }: UsersManagerProps) {
                             {user.full_name.charAt(0)}
                           </AvatarFallback>
                         </Avatar>
-                        <div>
-                          <p className="font-semibold text-foreground">
-                            {user.full_name}
+                        <div
+                          onClick={() => handleOpenStudentDetails(user)}
+                          className="cursor-pointer group/name"
+                        >
+                          <p className="font-semibold text-foreground group-hover/name:text-primary transition-colors flex items-center gap-1.5">
+                            <span>{user.full_name}</span>
+                            <BarChart3 className="h-3 w-3 text-muted-foreground opacity-0 group-hover/name:opacity-100 transition-opacity" />
                           </p>
                           <p className="text-[11px] text-muted-foreground">
                             انضم {formatDate(user.created_at)}
@@ -349,7 +403,15 @@ export function UsersManager({ initialUsers, allSubjects }: UsersManagerProps) {
                             <MoreVertical className="h-4 w-4" />
                           </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-44">
+                        <DropdownMenuContent align="end" className="w-48">
+                          <DropdownMenuItem
+                            onClick={() => handleOpenStudentDetails(user)}
+                            className="gap-2 font-bold text-primary"
+                          >
+                            <BarChart3 className="h-3.5 w-3.5 text-primary" />
+                            <span>الملف والإحصائيات</span>
+                          </DropdownMenuItem>
+
                           <DropdownMenuItem
                             onClick={() => handleOpenEdit(user)}
                             className="gap-2"
@@ -659,6 +721,22 @@ export function UsersManager({ initialUsers, allSubjects }: UsersManagerProps) {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Drawer: Detailed Student Analytics & Progress */}
+      <StudentDetailsDrawer
+        studentId={viewStudentId}
+        isOpen={isDrawerOpen}
+        onClose={() => {
+          setIsDrawerOpen(false);
+          setViewStudentId(null);
+        }}
+        onToggleStatus={async (id, currentStatus) => {
+          const u = initialUsers.find((user) => user.id === id);
+          if (u) {
+            await handleToggleStatus(u);
+          }
+        }}
+      />
     </div>
   );
 }
