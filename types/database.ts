@@ -2,6 +2,28 @@ export type UserRole = "admin" | "student";
 export type ContentType = "lecture" | "section" | "summary" | "exam";
 export type ResourceType = "video" | "pdf" | "link" | "summary" | "presentation" | "exam";
 export type AnnouncementTargetType = "all" | "subject";
+export type AnnouncementType = "general" | "course" | "exam" | "important" | "system";
+export type AnnouncementPriority = "normal" | "important" | "urgent";
+export type AnnouncementAudience = "all" | "subject" | "students";
+
+export interface AnnouncementMeta {
+  type: AnnouncementType;
+  priority: AnnouncementPriority;
+  author_name?: string;
+  target_audience: AnnouncementAudience;
+  target_student_ids?: string[];
+}
+
+export interface DetailedAnnouncement extends Announcement {
+  type: AnnouncementType;
+  priority: AnnouncementPriority;
+  author_name: string;
+  target_audience: AnnouncementAudience;
+  target_student_ids?: string[];
+  clean_content: string;
+  is_read?: boolean;
+  is_expired?: boolean;
+}
 
 export interface Profile {
   id: string;

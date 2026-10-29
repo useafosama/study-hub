@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { requireAuth } from "@/lib/auth/session";
 import { Subject, Content, Announcement, Bookmark, ContentType } from "@/types/database";
 import { logActivity } from "@/lib/activity/log";
+import { parseAnnouncementContent } from "@/lib/announcements";
 
 export async function getStudentDashboardData() {
   const session = await requireAuth();
@@ -80,16 +81,25 @@ export async function getStudentDashboardData() {
       target_type,
       subject_id,
       created_at,
+      expires_at,
       subjects (name)
     `)
     .eq("is_published", true)
     .order("created_at", { ascending: false })
-    .limit(5);
+    .limit(10);
 
-  const formattedAnnouncements: Announcement[] = (announcements || []).map((a: any) => ({
-    ...a,
-    subject_name: a.subjects?.name || null,
-  }));
+  const now = new Date();
+  const formattedAnnouncements: Announcement[] = (announcements || [])
+    .filter((a: any) => !a.expires_at || new Date(a.expires_at) >= now)
+    .map((a: any) => {
+      const { cleanContent } = parseAnnouncementContent(a.content, a.subject_id);
+      return {
+        ...a,
+        content: cleanContent,
+        subject_name: a.subjects?.name || null,
+      };
+    })
+    .slice(0, 5);
 
   // 4. Get Recently Added Content in Assigned Subjects
   let recentContents: any[] = [];

@@ -82,11 +82,16 @@ export const ResourceSchema = z.object({
 export const AnnouncementSchema = z.object({
   id: uuidSchema.optional(),
   title: z.string().min(3, "عنوان الإعلان مطلوب").max(150),
-  content: z.string().min(5, "نص الإعلان مطلوب").max(3000),
+  content: z.string().min(5, "نص الإعلان مطلوب").max(5000),
   target_type: z.enum(["all", "subject"]).default("all"),
   subject_id: uuidSchema.optional().nullable(),
   is_published: z.boolean().default(true),
   expires_at: z.string().optional().nullable(),
+  type: z.enum(["general", "course", "exam", "important", "system"]).default("general"),
+  priority: z.enum(["normal", "important", "urgent"]).default("normal"),
+  target_audience: z.enum(["all", "subject", "students"]).default("all"),
+  target_student_ids: z.array(z.string()).optional().default([]),
+  author_name: z.string().max(80).optional(),
 });
 
 export const PlatformSettingsSchema = z.object({

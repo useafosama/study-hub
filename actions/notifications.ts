@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { requireAuth, requireAdmin } from "@/lib/auth/session";
 import { logActivity } from "@/lib/activity/log";
+import { parseAnnouncementContent } from "@/lib/announcements";
 import {
   NotificationItem,
   NotificationPreferences,
@@ -131,11 +132,23 @@ export async function getStudentNotifications(): Promise<StudentNotificationsRes
 
       if (announcements) {
         for (const a of announcements) {
-          // Check if targeting matches student
-          if (
-            a.target_type === "all" ||
-            (a.target_type === "subject" && a.subject_id && assignedSubjectIds.includes(a.subject_id))
-          ) {
+          const { cleanContent, meta } = parseAnnouncementContent(a.content, a.subject_id);
+
+          // Check targeting
+          let isTargeted = false;
+          if (meta.target_audience === "all") {
+            isTargeted = true;
+          } else if (meta.target_audience === "subject") {
+            isTargeted = Boolean(a.subject_id && assignedSubjectIds.includes(a.subject_id));
+          } else if (meta.target_audience === "students") {
+            isTargeted = Boolean(meta.target_student_ids && meta.target_student_ids.includes(userId));
+          } else {
+            isTargeted =
+              a.target_type === "all" ||
+              (a.target_type === "subject" && a.subject_id && assignedSubjectIds.includes(a.subject_id));
+          }
+
+          if (isTargeted) {
             const notifId = `ann_${a.id}`;
             const subName = (a as any).subjects?.name;
             notifications.push({
@@ -143,8 +156,8 @@ export async function getStudentNotifications(): Promise<StudentNotificationsRes
               subjectId: a.subject_id,
               type: "announcement",
               title: a.title,
-              message: subName ? `إعلان خاص بمادة ${subName}: ${a.content}` : a.content,
-              link: "/announcements",
+              message: subName ? `إعلان خاص بمادة ${subName}: ${cleanContent}` : cleanContent,
+              link: `/announcements?id=${a.id}`,
               read: readNotificationIds.has(notifId),
               createdAt: a.created_at,
             });

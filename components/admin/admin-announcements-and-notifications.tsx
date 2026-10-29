@@ -2,12 +2,12 @@
 
 import * as React from "react";
 import { Bell, Send } from "lucide-react";
-import { Announcement, Subject } from "@/types/database";
+import { DetailedAnnouncement, Subject } from "@/types/database";
 import { AnnouncementsManager } from "./announcements-manager";
 import { AdminNotificationDispatcher } from "./admin-notification-dispatcher";
 
 interface AdminAnnouncementsAndNotificationsProps {
-  initialAnnouncements: Announcement[];
+  initialAnnouncements: DetailedAnnouncement[];
   subjects: Subject[];
   students: { id: string; full_name: string; username: string }[];
 }
@@ -64,6 +64,7 @@ export function AdminAnnouncementsAndNotifications({
         <AnnouncementsManager
           initialAnnouncements={initialAnnouncements}
           subjects={subjects}
+          students={students}
         />
       ) : (
         <AdminNotificationDispatcher
