@@ -7,6 +7,9 @@
     --background-subtle: 214 32% 93%;   /* #e9edf4 - Secondary Canvas */
     --foreground: 222 47% 11%;          /* #0f172a - Deep Slate Primary Text */
     
+    --surface: 0 0% 100%;               /* #ffffff */
+    --surface-elevated: 210 40% 98%;    /* #f8fafc */
+    
     --card: 0 0% 100%;                  /* #ffffff - Card Surface */
     --card-foreground: 222 47% 11%;
     --card-subtle: 210 40% 98%;         /* #f8fafc */
@@ -64,6 +67,9 @@
     --background: 224 35% 6%;           /* #0a0c12 - Deep Space Navy Canvas */
     --background-subtle: 224 30% 9%;    /* #10131d */
     --foreground: 210 40% 98%;          /* #f8fafc - Crisp White Primary Text */
+    
+    --surface: 224 25% 12%;             /* #161925 */
+    --surface-elevated: 224 25% 15%;    /* #1c202e */
     
     --card: 224 25% 12%;                /* #161925 - Layer 1 Dark Surface */
     --card-foreground: 210 40% 98%;
@@ -184,42 +190,44 @@ body {
   box-shadow: var(--shadow-elevated);
 }
 
-/* Apple Frosted Glass Panels */
+/* Apple Clean Floating Panels (Subtle Glass) */
 .glass-panel {
-  background: rgba(255, 255, 255, 0.82);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 0, 0, 0.06);
   box-shadow: var(--shadow-card);
   border-radius: 1.25rem;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .dark .glass-panel {
-  background: rgba(22, 25, 37, 0.75);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+  background: rgba(22, 25, 37, 0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: var(--shadow-card);
 }
 
 .glass-card-interactive {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.9);
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border) / 0.8);
   box-shadow: var(--shadow-card);
   border-radius: 1.25rem;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform, box-shadow;
 }
 
 .dark .glass-card-interactive {
-  background: rgba(22, 25, 37, 0.75);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border) / 0.8);
   box-shadow: var(--shadow-card);
+}
+
+.glass-card-interactive:hover {
+  transform: translateY(-2px);
+  border-color: hsl(var(--primary) / 0.45);
+  box-shadow: var(--shadow-elevated);
 }
 
 .glass-card-interactive:hover {

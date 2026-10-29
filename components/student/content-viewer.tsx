@@ -7,11 +7,8 @@ import {
   toggleContentCompletionAction,
   toggleBookmarkAction,
 } from "@/actions/student";
-import { YouTubePlayer } from "@/components/shared/youtube-player";
 import { EducationalVideoPlayer } from "@/components/shared/educational-video-player";
 import { LectureResourcesPanel } from "@/components/student/lecture-resources-panel";
-import { PDFViewer } from "@/components/shared/pdf-viewer";
-import { SmartNotes } from "@/components/student/smart-notes";
 import { saveRecentViewed } from "@/components/student/continue-learning-widget";
 import { FocusTimerWidget } from "@/components/student/focus-timer-widget";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
@@ -32,8 +29,9 @@ import {
   Share2,
   Layers,
   FileText,
-  Link as LinkIcon,
   Clock,
+  Sparkles,
+  Trophy,
 } from "lucide-react";
 import { Content, Subject, Resource } from "@/types/database";
 
@@ -119,6 +117,13 @@ export function ContentViewer({
     }
   };
 
+  const handleShareLink = () => {
+    if (typeof window !== "undefined") {
+      navigator.clipboard.writeText(window.location.href);
+      toast.success("تم نسخ رابط المحاضرة بنجاح");
+    }
+  };
+
   const videoResources = content.resources?.filter((r) => r.type === "video") || [];
   const pdfResources = content.resources?.filter((r) => r.type === "pdf") || [];
   const linkResources = content.resources?.filter((r) => r.type === "link") || [];
@@ -127,46 +132,174 @@ export function ContentViewer({
   const currentVideo = videoResources[activeVideoIndex] || videoResources[0];
 
   return (
-    <div className="space-y-6 max-w-4xl mx-auto">
-      {/* Top Header & Breadcrumb */}
-      <div className="flex items-center justify-between gap-4">
-        <div className="flex items-center gap-2 text-xs text-muted-foreground">
-          <Link href={`/subjects/${subject.id}`} className="hover:text-foreground flex items-center gap-1.5 transition-colors">
-            <BookOpen className="h-3.5 w-3.5 text-primary" />
-            <span>{subject.name}</span>
+    <div className="space-y-6 max-w-4xl mx-auto pb-12">
+      {/* 0. Top Breadcrumb & Quick Actions */}
+      <div className="flex items-center justify-between gap-3 pb-1 border-b border-border/40">
+        <div className="flex items-center gap-2 text-xs text-muted-foreground min-w-0">
+          <Link
+            href={`/subjects/${subject.id}`}
+            className="hover:text-foreground flex items-center gap-1.5 transition-colors font-medium truncate"
+          >
+            <BookOpen className="h-3.5 w-3.5 text-primary shrink-0" />
+            <span className="truncate">{subject.name}</span>
           </Link>
-          <ChevronRight className="h-3.5 w-3.5 rotate-180 text-muted-foreground" />
-          <Badge variant={content.type === "lecture" ? "default" : "purple"} className="text-[10px]">
+          <ChevronRight className="h-3.5 w-3.5 rotate-180 text-muted-foreground shrink-0" />
+          <Badge variant={content.type === "lecture" ? "default" : "purple"} className="text-[10px] shrink-0">
             {content.type === "lecture" ? "محاضرة" : "سكشن"}
           </Badge>
         </div>
 
-        {/* Action buttons: Timer, Bookmark & Complete */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 shrink-0">
           <Button
-            variant="outline"
+            variant="ghost"
             size="sm"
-            onClick={() => setIsTimerDialogOpen(true)}
-            className="rounded-xl gap-1.5 text-xs text-primary border-primary/20 bg-primary/5 hover:bg-primary/10 transition-all font-semibold"
-            title="بدء مؤقت التركيز لهذه المحاضرة"
+            onClick={handleShareLink}
+            className="h-8 w-8 rounded-xl p-0 text-muted-foreground hover:text-foreground cursor-pointer"
+            title="نسخ الرابط"
           >
-            <Clock className="h-3.5 w-3.5 text-primary" />
-            <span className="hidden sm:inline">مؤقت المذاكرة</span>
-            <span className="sm:hidden">تركيز</span>
+            <Share2 className="h-3.5 w-3.5" />
           </Button>
 
           <Button
             variant="outline"
             size="sm"
             onClick={handleToggleBookmark}
-            className={`rounded-xl gap-1.5 text-xs transition-all ${
+            className={`h-8 rounded-xl px-2.5 gap-1.5 text-xs transition-all cursor-pointer ${
               isBookmarked
                 ? "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30"
-                : ""
+                : "text-muted-foreground hover:text-foreground"
             }`}
           >
             <Bookmark className={`h-3.5 w-3.5 ${isBookmarked ? "fill-amber-500 text-amber-500" : ""}`} />
-            <span>{isBookmarked ? "محفوظ" : "حفظ"}</span>
+            <span className="hidden sm:inline">{isBookmarked ? "محفوظ" : "حفظ"}</span>
+          </Button>
+        </div>
+      </div>
+
+      {/* 1. VIDEO PLAYER (First in Hierarchy) */}
+      <section className="space-y-3">
+        {videoResources.length > 0 ? (
+          <div className="space-y-3">
+            {/* Multiple Videos Selector Tabs if applicable */}
+            {videoResources.length > 1 && (
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 p-3 rounded-2xl bg-secondary/40 border border-border/70 backdrop-blur-md">
+                <div className="flex items-center gap-2">
+                  <span className="flex h-2 w-2 rounded-full bg-primary animate-pulse" />
+                  <span className="text-xs font-bold text-foreground">
+                    أجزاء المحاضرة ({videoResources.length} مقاطع فيديو):
+                  </span>
+                </div>
+                <div className="flex flex-wrap items-center gap-1.5">
+                  {videoResources.map((vid, idx) => {
+                    const isActive = activeVideoIndex === idx;
+                    return (
+                      <button
+                        key={vid.id || idx}
+                        type="button"
+                        onClick={() => setActiveVideoIndex(idx)}
+                        className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 active:scale-95 ${
+                          isActive
+                            ? "bg-primary text-primary-foreground shadow-sm font-bold"
+                            : "bg-card/80 hover:bg-card text-muted-foreground hover:text-foreground border border-border/60"
+                        }`}
+                      >
+                        <span className="flex h-4 w-4 rounded-full items-center justify-center bg-black/10 dark:bg-white/15 text-[10px]">
+                          {idx + 1}
+                        </span>
+                        <span>{vid.title || `الجزء ${idx + 1}`}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* Active Educational Video Player */}
+            {currentVideo && (
+              <div className="space-y-2">
+                <EducationalVideoPlayer
+                  key={currentVideo.id || currentVideo.url}
+                  url={currentVideo.url}
+                  title={currentVideo.title || content.title}
+                  contentId={content.id}
+                  onCompletionThreshold={handleVideoCompletionThreshold}
+                  activeSeekTimestamp={seekTimestamp}
+                />
+                {videoResources.length > 1 && (
+                  <div className="flex items-center justify-between px-1 text-xs text-muted-foreground">
+                    <span className="font-medium text-foreground">
+                      المشغل حالياً: {currentVideo.title || `الجزء ${activeVideoIndex + 1}`}
+                    </span>
+                    <span>(فيديو {activeVideoIndex + 1} من {videoResources.length})</span>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="p-8 rounded-2xl border border-dashed border-border text-center text-xs text-muted-foreground bg-muted/20">
+            لا يوجد مقطع فيديو مرفق بهذه المحاضرة
+          </div>
+        )}
+      </section>
+
+      {/* 2. LECTURE TITLE & DETAILS */}
+      <section className="space-y-2">
+        <h1 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-foreground font-sans">
+          {content.title}
+        </h1>
+        {content.description && (
+          <p className="text-xs sm:text-sm text-muted-foreground whitespace-pre-wrap leading-relaxed">
+            {content.description}
+          </p>
+        )}
+      </section>
+
+      {/* 3. PROGRESS & COMPLETION STATUS */}
+      <section className="apple-card p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div
+            className={`h-11 w-11 rounded-2xl flex items-center justify-center shrink-0 transition-colors ${
+              isCompleted
+                ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400"
+                : "bg-secondary text-muted-foreground"
+            }`}
+          >
+            {isCompleted ? (
+              <CheckCircle2 className="h-6 w-6" />
+            ) : (
+              <Circle className="h-6 w-6 stroke-[1.5]" />
+            )}
+          </div>
+
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-bold text-foreground">
+                {isCompleted ? "تم إكمال المحاضرة بنجاح" : "المحاضرة قيد المتابعة"}
+              </span>
+              {isCompleted && (
+                <span className="text-[10px] bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 font-bold px-2 py-0.5 rounded-full">
+                  مكتمل 100%
+                </span>
+              )}
+            </div>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              {isCompleted
+                ? "تم احتساب المحاضرة ضمن سجلك الدراسي ومعدل إنجاز المقرر"
+                : "شاهد 85% من الفيديو أو اضغط الزر لتحديدها كمكتملة"}
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2 self-end sm:self-auto shrink-0">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setIsTimerDialogOpen(true)}
+            className="h-9 rounded-xl gap-1.5 text-xs text-primary border-primary/20 bg-primary/5 hover:bg-primary/10 transition-all font-semibold cursor-pointer"
+          >
+            <Clock className="h-3.5 w-3.5 text-primary" />
+            <span>بدء مؤقت التركيز</span>
           </Button>
 
           <Button
@@ -174,113 +307,38 @@ export function ContentViewer({
             size="sm"
             disabled={isPending}
             onClick={handleToggleCompleted}
-            className={`rounded-xl gap-1.5 text-xs transition-all ${
+            className={`h-9 rounded-xl gap-1.5 text-xs font-semibold transition-all cursor-pointer ${
               isCompleted
                 ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/20"
                 : ""
             }`}
           >
-            <CheckCircle2 className={`h-4 w-4 ${isCompleted ? "text-emerald-600 dark:text-emerald-400 fill-emerald-500/20" : ""}`} />
-            <span>{isCompleted ? "تم الإكمال ✓" : "تحديد كمكتمل"}</span>
+            <CheckCircle2 className="h-4 w-4" />
+            <span>{isCompleted ? "تحديد كغير مكتمل" : "تحديد كمكتمل"}</span>
           </Button>
         </div>
-      </div>
+      </section>
 
-      {/* Main Title & Description */}
-      <div className="space-y-2">
-        <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">
-          {content.title}
-        </h1>
-        {content.description && (
-          <p className="text-sm text-muted-foreground whitespace-pre-wrap leading-relaxed">
-            {content.description}
-          </p>
-        )}
-      </div>
+      {/* 4. RESOURCES (PDF, Links) + 5. NOTES & TIMESTAMPS */}
+      <section className="space-y-4">
+        <LectureResourcesPanel
+          contentId={content.id}
+          contentTitle={content.title}
+          subjectId={subject.id}
+          subjectName={subject.name}
+          subjectCode={subject.code}
+          pdfResources={pdfResources}
+          linkResources={linkResources}
+          onSeekToTimestamp={(seconds) => setSeekTimestamp(seconds)}
+        />
+      </section>
 
-      {/* YouTube Video Section */}
-      {videoResources.length > 0 ? (
-        <div className="space-y-3">
-          {/* Multiple Videos Selector Tabs */}
-          {videoResources.length > 1 && (
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 p-3 rounded-2xl bg-secondary/40 border border-border/70 backdrop-blur-md">
-              <div className="flex items-center gap-2">
-                <span className="flex h-2 w-2 rounded-full bg-primary animate-pulse" />
-                <span className="text-xs font-bold text-foreground">
-                  أجزاء المحاضرة ({videoResources.length} مقاطع فيديو):
-                </span>
-              </div>
-              <div className="flex flex-wrap items-center gap-1.5">
-                {videoResources.map((vid, idx) => {
-                  const isActive = activeVideoIndex === idx;
-                  return (
-                    <button
-                      key={vid.id || idx}
-                      type="button"
-                      onClick={() => setActiveVideoIndex(idx)}
-                      className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 active:scale-95 ${
-                        isActive
-                          ? "bg-primary text-primary-foreground shadow-sm font-bold"
-                          : "bg-card/80 hover:bg-card text-muted-foreground hover:text-foreground border border-border/60"
-                      }`}
-                    >
-                      <span className="flex h-4 w-4 rounded-full items-center justify-center bg-black/10 dark:bg-white/15 text-[10px]">
-                        {idx + 1}
-                      </span>
-                      <span>{vid.title || `الجزء ${idx + 1}`}</span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          {/* Active Educational Video Player */}
-          {currentVideo && (
-            <div className="space-y-2">
-              <EducationalVideoPlayer
-                key={currentVideo.id || currentVideo.url}
-                url={currentVideo.url}
-                title={currentVideo.title || content.title}
-                contentId={content.id}
-                onCompletionThreshold={handleVideoCompletionThreshold}
-                activeSeekTimestamp={seekTimestamp}
-              />
-              {videoResources.length > 1 && (
-                <div className="flex items-center justify-between px-1 text-xs text-muted-foreground">
-                  <span className="font-medium text-foreground">
-                    المشغل حالياً: {currentVideo.title || `الجزء ${activeVideoIndex + 1}`}
-                  </span>
-                  <span>(فيديو {activeVideoIndex + 1} من {videoResources.length})</span>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      ) : (
-        <div className="p-8 rounded-2xl border border-dashed border-border text-center text-xs text-muted-foreground bg-muted/20">
-          لا يوجد مقطع فيديو مرفق بهذه المحاضرة
-        </div>
-      )}
-
-      {/* Unified Lecture Resources & Timeline Panel (Materials, Bookmarks, Timestamp Notes, Smart Notes) */}
-      <LectureResourcesPanel
-        contentId={content.id}
-        contentTitle={content.title}
-        subjectId={subject.id}
-        subjectName={subject.name}
-        subjectCode={subject.code}
-        pdfResources={pdfResources}
-        linkResources={linkResources}
-        onSeekToTimestamp={(seconds) => setSeekTimestamp(seconds)}
-      />
-
-      {/* Navigation Footer (Previous / Next) */}
-      <div className="pt-6 border-t border-border/60 flex items-center justify-between gap-4">
+      {/* 6. SEQUENTIAL / RELATED LECTURES NAVIGATION */}
+      <section className="pt-6 border-t border-border/60 flex items-center justify-between gap-4">
         {prevContent ? (
-          <Button asChild variant="outline" className="rounded-xl gap-2 text-xs flex-1 sm:flex-none justify-start">
+          <Button asChild variant="outline" className="rounded-2xl gap-2 text-xs flex-1 sm:flex-none justify-start h-12 px-4 cursor-pointer">
             <Link href={`/content/${prevContent.id}`}>
-              <ArrowRight className="h-4 w-4" />
+              <ArrowRight className="h-4 w-4 text-muted-foreground" />
               <div className="text-right">
                 <span className="block text-[10px] text-muted-foreground">المحتوى السابق</span>
                 <span className="font-semibold line-clamp-1">{prevContent.title}</span>
@@ -292,17 +350,17 @@ export function ContentViewer({
         )}
 
         {nextContent && (
-          <Button asChild variant="default" className="rounded-xl gap-2 text-xs flex-1 sm:flex-none justify-end">
+          <Button asChild variant="default" className="rounded-2xl gap-2 text-xs flex-1 sm:flex-none justify-end h-12 px-4 cursor-pointer shadow-sm">
             <Link href={`/content/${nextContent.id}`}>
               <div className="text-left">
-                <span className="block text-[10px] text-primary-foreground/70">المحتوى التالي</span>
+                <span className="block text-[10px] text-primary-foreground/75">المحتوى التالي</span>
                 <span className="font-semibold line-clamp-1">{nextContent.title}</span>
               </div>
               <ArrowLeft className="h-4 w-4" />
             </Link>
           </Button>
         )}
-      </div>
+      </section>
 
       {/* Focus Timer Modal Dialog bound to this lecture */}
       <Dialog open={isTimerDialogOpen} onOpenChange={setIsTimerDialogOpen}>
@@ -320,4 +378,3 @@ export function ContentViewer({
     </div>
   );
 }
-

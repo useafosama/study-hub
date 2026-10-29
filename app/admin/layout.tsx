@@ -6,17 +6,11 @@ import { logoutAction } from "@/actions/auth";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { AdminSidebarNav, AdminMobileBottomNav } from "@/components/admin/admin-nav";
 import {
-  LayoutDashboard,
-  Users,
-  BookOpen,
-  Bell,
-  Activity,
-  Settings,
   LogOut,
   ExternalLink,
   GraduationCap,
-  Menu,
 } from "lucide-react";
 
 export default async function AdminLayout({
@@ -30,14 +24,7 @@ export default async function AdminLayout({
     redirect("/login");
   }
 
-  const navItems = [
-    { href: "/admin", label: "لوحة التحكم", icon: LayoutDashboard },
-    { href: "/admin/users", label: "المستخدمين والطلاب", icon: Users },
-    { href: "/admin/subjects", label: "المواد والمحتوى", icon: BookOpen },
-    { href: "/admin/announcements", label: "الإعلانات", icon: Bell },
-    { href: "/admin/activity", label: "سجل النشاطات", icon: Activity },
-    { href: "/admin/settings", label: "الإعدادات", icon: Settings },
-  ];
+
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row relative">
@@ -69,21 +56,7 @@ export default async function AdminLayout({
           </div>
 
           {/* Navigation links */}
-          <nav className="space-y-1">
-            {navItems.map((item) => {
-              const Icon = item.icon;
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="flex items-center gap-3 px-3 py-2.5 rounded-2xl text-xs sm:text-sm font-semibold text-muted-foreground hover:text-foreground hover:bg-secondary/70 transition-all border border-transparent hover:border-border/60"
-                >
-                  <Icon className="h-4 w-4 shrink-0 text-muted-foreground" />
-                  <span>{item.label}</span>
-                </Link>
-              );
-            })}
-          </nav>
+          <AdminSidebarNav />
         </div>
 
         {/* User Info & Footer actions */}
@@ -155,21 +128,7 @@ export default async function AdminLayout({
       </header>
 
       {/* Mobile Bottom Navigation for Admin */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-card/80 backdrop-blur-2xl border-t border-border/70 flex items-center justify-around py-2 px-1 safe-bottom shadow-lg">
-        {navItems.slice(0, 5).map((item) => {
-          const Icon = item.icon;
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="flex flex-col items-center gap-1 p-1 text-muted-foreground hover:text-primary text-[10px] font-semibold"
-            >
-              <Icon className="h-4 w-4" />
-              <span>{item.label.split(" ")[0]}</span>
-            </Link>
-          );
-        })}
-      </nav>
+      <AdminMobileBottomNav />
 
       {/* Main Admin Content Container */}
       <main className="flex-1 p-4 md:p-8 max-w-7xl mx-auto w-full mb-16 md:mb-0">

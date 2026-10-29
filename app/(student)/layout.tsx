@@ -8,20 +8,8 @@ import { ThemeToggle } from "@/components/shared/theme-toggle";
 import { NotificationBellButton } from "@/components/notifications/notification-bell-button";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import {
-  LayoutDashboard,
-  BookOpen,
-  Bookmark,
-  Search,
-  Bell,
-  User,
-  LogOut,
-  GraduationCap,
-  Shield,
-  Calendar,
-  FileEdit,
-  BarChart3,
-} from "lucide-react";
+import { GraduationCap, LogOut, Shield } from "lucide-react";
+import { DesktopSidebarNav, MobileBottomNav } from "@/components/student/student-nav";
 
 export default async function StudentLayout({
   children,
@@ -37,17 +25,7 @@ export default async function StudentLayout({
   const notifData = await getStudentNotifications().catch(() => ({ unreadCount: 0 }));
   const unreadNotifsCount = notifData.unreadCount || 0;
 
-  const navItems = [
-    { href: "/dashboard", label: "الرئيسية", icon: LayoutDashboard },
-    { href: "/subjects", label: "موادي", icon: BookOpen },
-    { href: "/analytics", label: "التحليلات", icon: BarChart3 },
-    { href: "/notifications", label: "الإشعارات والتنبيهات", icon: Bell },
-    { href: "/planner", label: "خطة المذاكرة", icon: Calendar },
-    { href: "/notes", label: "دفتر ملاحظاتي", icon: FileEdit },
-    { href: "/bookmarks", label: "المحفوظات", icon: Bookmark },
-    { href: "/search", label: "البحث", icon: Search },
-    { href: "/profile", label: "الملف الشخصي", icon: User },
-  ];
+
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row relative bg-background text-foreground">
@@ -82,21 +60,7 @@ export default async function StudentLayout({
           </div>
 
           {/* Navigation links */}
-          <nav className="space-y-1">
-            {navItems.map((item) => {
-              const Icon = item.icon;
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="flex items-center gap-3 px-3 py-2.5 rounded-2xl text-xs sm:text-sm font-semibold text-muted-foreground hover:text-foreground hover:bg-muted/80 hover:shadow-xs transition-all border border-transparent hover:border-border/60"
-                >
-                  <Icon className="h-4 w-4 shrink-0 text-muted-foreground" />
-                  <span>{item.label}</span>
-                </Link>
-              );
-            })}
-          </nav>
+          <DesktopSidebarNav />
         </div>
 
         {/* User Info & Footer */}
@@ -167,21 +131,7 @@ export default async function StudentLayout({
       </header>
 
       {/* Mobile Bottom Navigation for Students */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-card/85 backdrop-blur-2xl border-t border-border flex items-center justify-around py-2 px-1 safe-bottom shadow-lg">
-        {navItems.slice(0, 5).map((item) => {
-          const Icon = item.icon;
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="flex flex-col items-center gap-1 p-1 text-muted-foreground hover:text-primary text-[10px] font-semibold"
-            >
-              <Icon className="h-4 w-4" />
-              <span>{item.label}</span>
-            </Link>
-          );
-        })}
-      </nav>
+      <MobileBottomNav />
 
       {/* Main Content Area */}
       <main className="flex-1 p-4 md:p-8 max-w-6xl mx-auto w-full mb-16 md:mb-0">
