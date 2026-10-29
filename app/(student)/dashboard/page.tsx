@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getStudentDashboardData } from "@/actions/student";
 import { ContinueLearningWidget } from "@/components/student/continue-learning-widget";
 import { StreakBadgeWidget } from "@/components/student/streak-badge-widget";
+import { FocusTimerWidget } from "@/components/student/focus-timer-widget";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
@@ -145,7 +146,17 @@ export default async function StudentDashboardPage() {
         }
       />
 
-      {/* 4. Badges & Daily Streak System */}
+      {/* 4. Focus Study Timer System */}
+      <FocusTimerWidget
+        userId={profile.id}
+        subjects={subjects.map((s) => ({
+          id: s.id,
+          name: s.name,
+          code: s.code,
+        }))}
+      />
+
+      {/* 5. Badges & Daily Streak System */}
       <StreakBadgeWidget
         totalContents={totalContentsCount}
         completedContents={totalCompletedCount}

@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { requireAuth } from "@/lib/auth/session";
 import { Subject, Content, Announcement, Bookmark } from "@/types/database";
+import { logActivity } from "@/lib/activity/log";
 
 export async function getStudentDashboardData() {
   const session = await requireAuth();
@@ -488,4 +489,64 @@ export async function searchAccessibleContent(query: string) {
     contents: matchingContents || [],
     resources: matchingResources || [],
   };
+}
+
+export interface RecordStudySessionParams {
+  sessionId?: string;
+  courseId: string;
+  courseName: string;
+  courseCode: string;
+  lectureId?: string | null;
+  lectureTitle?: string | null;
+  startTime: string;
+  endTime: string;
+  duration: number; // in seconds
+  targetDuration: number; // in seconds
+  completionStatus: "completed" | "early_finish";
+}
+
+export async function recordStudySessionAction(params: RecordStudySessionParams) {
+  const session = await requireAuth();
+  const supabase = await createClient();
+  const userId = session.profile.id;
+
+  // 1. Try writing directly to study_sessions table if it exists
+  try {
+    const isSubjectValid = params.courseId && params.courseId !== "general";
+    await supabase.from("study_sessions").insert({
+      id: params.sessionId,
+      user_id: userId,
+      subject_id: isSubjectValid ? params.courseId : null,
+      content_id: params.lectureId || null,
+      start_time: params.startTime,
+      end_time: params.endTime,
+      duration_seconds: params.duration,
+      target_duration_seconds: params.targetDuration,
+      completion_status: params.completionStatus,
+    });
+  } catch (err) {
+    // Graceful fallback if table is not yet created
+    console.debug("Note: study_sessions table insert skipped or pending migration", err);
+  }
+
+  // 2. Log activity to activity_logs for audit & admin monitoring
+  await logActivity({
+    userId,
+    action: "study_session",
+    entityType: "study_session",
+    entityId: params.lectureId || (params.courseId !== "general" ? params.courseId : null),
+    metadata: {
+      courseName: params.courseName,
+      courseCode: params.courseCode,
+      lectureTitle: params.lectureTitle,
+      duration: params.duration,
+      targetDuration: params.targetDuration,
+      completionStatus: params.completionStatus,
+      durationMinutes: Math.round(params.duration / 60),
+    },
+  });
+
+  revalidatePath("/dashboard");
+  revalidatePath("/admin/activity");
+  return { success: true };
 }

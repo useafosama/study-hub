@@ -11,6 +11,8 @@ import { YouTubePlayer } from "@/components/shared/youtube-player";
 import { PDFViewer } from "@/components/shared/pdf-viewer";
 import { SmartNotes } from "@/components/student/smart-notes";
 import { saveRecentViewed } from "@/components/student/continue-learning-widget";
+import { FocusTimerWidget } from "@/components/student/focus-timer-widget";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
@@ -29,6 +31,7 @@ import {
   Layers,
   FileText,
   Link as LinkIcon,
+  Clock,
 } from "lucide-react";
 import { Content, Subject, Resource } from "@/types/database";
 
@@ -48,6 +51,7 @@ export function ContentViewer({
   const router = useRouter();
   const [isCompleted, setIsCompleted] = React.useState(content.is_completed || false);
   const [isBookmarked, setIsBookmarked] = React.useState(content.is_bookmarked || false);
+  const [isTimerDialogOpen, setIsTimerDialogOpen] = React.useState(false);
   const [isPending, setIsPending] = React.useState(false);
 
   // Sync to localStorage on visit
@@ -121,8 +125,20 @@ export function ContentViewer({
           </Badge>
         </div>
 
-        {/* Action buttons: Bookmark & Complete */}
+        {/* Action buttons: Timer, Bookmark & Complete */}
         <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setIsTimerDialogOpen(true)}
+            className="rounded-xl gap-1.5 text-xs text-primary border-primary/20 bg-primary/5 hover:bg-primary/10 transition-all font-semibold"
+            title="بدء مؤقت التركيز لهذه المحاضرة"
+          >
+            <Clock className="h-3.5 w-3.5 text-primary" />
+            <span className="hidden sm:inline">مؤقت المذاكرة</span>
+            <span className="sm:hidden">تركيز</span>
+          </Button>
+
           <Button
             variant="outline"
             size="sm"
@@ -306,6 +322,20 @@ export function ContentViewer({
           </Button>
         )}
       </div>
+
+      {/* Focus Timer Modal Dialog bound to this lecture */}
+      <Dialog open={isTimerDialogOpen} onOpenChange={setIsTimerDialogOpen}>
+        <DialogContent className="max-w-3xl p-0 overflow-hidden rounded-3xl border-border bg-transparent shadow-2xl">
+          <FocusTimerWidget
+            subjects={[{ id: subject.id, name: subject.name, code: subject.code }]}
+            initialSubjectId={subject.id}
+            initialSubjectName={subject.name}
+            initialSubjectCode={subject.code}
+            initialLectureId={content.id}
+            initialLectureTitle={content.title}
+          />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

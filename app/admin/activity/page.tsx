@@ -51,6 +51,8 @@ export default async function AdminActivityPage() {
         return { label: "نشر إعلان", variant: "purple" as const };
       case "update_settings":
         return { label: "تحديث الإعدادات", variant: "default" as const };
+      case "study_session":
+        return { label: "جلسة مذاكرة", variant: "success" as const };
       default:
         return { label: action, variant: "secondary" as const };
     }
